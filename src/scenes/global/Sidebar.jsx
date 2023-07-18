@@ -155,8 +155,8 @@ const Sidebar = () => {
               setSelected={setSelected}
             />
             <Item
-              title="Profile Registration"
-              to="/form"
+              title="Register a user"
+              to="/register"
               icon={<PersonOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -202,7 +202,7 @@ const Sidebar = () => {
             />
             <Item
               title="Technical Support"
-              to="/faq"
+              to="/support"
               icon={<HelpOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
