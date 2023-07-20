@@ -8,8 +8,6 @@ import { tokens } from "../../theme";
 // icons
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
-import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
-import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
@@ -146,7 +144,7 @@ const Sidebar = () => {
               Users
             </Typography>
             {/* End Label */}
-            
+
             <Item
               title="Manage Team"
               to="/team"
@@ -185,11 +183,11 @@ const Sidebar = () => {
               icon={<NotificationsOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            /> 
+            />
             <Item
               title="Water Status"
               to="/pie"
-              icon={<WaterDropOutlinedIcon/>}
+              icon={<WaterDropOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
@@ -206,10 +204,10 @@ const Sidebar = () => {
               icon={<HelpOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            /> 
+            />
 
             {/*Logout of session*/}
-            
+
             {/* Label */}
             <Typography
               variant="h6"

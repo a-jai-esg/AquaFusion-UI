@@ -11,9 +11,14 @@ import Dashboard from "./scenes/dashboard";
 import Team from "./scenes/teams";
 // import Invoice from "./scenes/global/Sidebar";
 import Notifications from "./scenes/notifications";
+import Calendar from "./scenes/calendar";
 // import Bar from "./scenes/global/Sidebar";
 import AdminApprovedRegistration from "./scenes/admin-profile-registration";
 import TechnicalSupport from "./scenes/TechnicalSupport";
+
+// data 
+import { mockCalendarDates as dates} from "./data/mockData";
+
 // import Line from "./scenes/global/Sidebar";
 // import Pie from "./scenes/global/Sidebar";
 // import Geography from "./scenes/geography";
@@ -31,11 +36,13 @@ export default function App() {
           <main className="content"> 
             <Topbar />
             <Routes>
+              <Route path="/" element={<Dashboard/>} />
               <Route path="/dashboard" element={<Dashboard/>} />
               <Route path="/team" element={<Team/>} />
               <Route path="/notifications" element={<Notifications />} /> 
               <Route path="/register" element={<AdminApprovedRegistration/>} />
               <Route path="/support" element={<TechnicalSupport />} />
+              <Route path="/calendar" element={<Calendar/>} date={dates}/>
               {/* 
               <Route path="/invoices" element={<Team />} />
               <Route path="/bar" element={<Bar />} />
