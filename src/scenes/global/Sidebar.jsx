@@ -8,7 +8,8 @@ import { tokens } from "../../theme";
 // icons
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
-
+import NatureOutlinedIcon from "@mui/icons-material/NatureOutlined";
+import WaterDropOutlinedIcon from "@mui/icons-material/WaterDropOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
@@ -21,7 +22,6 @@ import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 
 // user-added
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-import WaterDropOutlinedIcon from "@mui/icons-material/WaterOutlined";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -159,7 +159,13 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-
+            <Item
+              title="Harvest Calendar"
+              to="/calendar"
+              icon={<CalendarTodayOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
             {/* Label */}
             <Typography
               variant="h6"
@@ -171,13 +177,6 @@ const Sidebar = () => {
             </Typography>
             {/* End Label */}
             <Item
-              title="Calendar"
-              to="/calendar"
-              icon={<CalendarTodayOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
               title="System Notifications"
               to="/notifications"
               icon={<NotificationsOutlinedIcon />}
@@ -185,16 +184,16 @@ const Sidebar = () => {
               setSelected={setSelected}
             />
             <Item
-              title="Water Status"
+              title="Aquatic Sensors Status"
               to="/pie"
               icon={<WaterDropOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
-              title="Plant Growth Statistics"
+              title="Terrestrial Sensors Status"
               to="/line"
-              icon={<TimelineOutlinedIcon />}
+              icon={<NatureOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
