@@ -19,11 +19,6 @@ import TechnicalSupport from "./scenes/TechnicalSupport";
 // data 
 import { mockCalendarDates as dates} from "./data/mockData";
 
-// import Line from "./scenes/global/Sidebar";
-// import Pie from "./scenes/global/Sidebar";
-// import Geography from "./scenes/geography";
-// import Calendar from "./scenes/calendar";
-
 export default function App() {
   const [theme, colorMode] = useMode();
 
