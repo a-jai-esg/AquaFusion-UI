@@ -9,6 +9,7 @@ import Topbar from "./scenes/global/Topbar";
 import Sidebar from "./scenes/global/Sidebar";
 import Dashboard from "./scenes/dashboard";
 import Team from "./scenes/teams";
+import Profile from "./scenes/Profile";
 // import Invoice from "./scenes/global/Sidebar";
 import Notifications from "./scenes/notifications";
 import Calendar from "./scenes/calendar";
@@ -38,6 +39,7 @@ export default function App() {
               <Route path="/register" element={<AdminApprovedRegistration/>} />
               <Route path="/support" element={<TechnicalSupport />} />
               <Route path="/calendar" element={<Calendar/>} date={dates}/>
+              <Route path="/profile" element={<Profile/>}/>
               {/* 
               <Route path="/invoices" element={<Team />} />
               <Route path="/bar" element={<Bar />} />
