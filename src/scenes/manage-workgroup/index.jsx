@@ -1,24 +1,29 @@
 import { Typography, Box, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
-import { DataGrid, GridToolbarContainer, GridToolbarColumnsButton, GridToolbarExport} from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridToolbarContainer,
+  GridToolbarColumnsButton,
+  GridToolbarExport,
+} from "@mui/x-data-grid";
 import { mockDataTeam } from "../../data/mockData";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import Header from "../../components/Header";
 
-const Team = () => {
+const ManageWorkgroup = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const customToolBar =  () => {
+  const customToolBar = () => {
     return (
       <GridToolbarContainer>
-        <GridToolbarColumnsButton/>
-        <GridToolbarExport/>
+        <GridToolbarColumnsButton />
+        <GridToolbarExport />
       </GridToolbarContainer>
     );
-  }
+  };
 
   const columns = [
     {
@@ -85,7 +90,10 @@ const Team = () => {
 
   return (
     <Box m="20px;">
-      <Header title="Manage Team" subtitle="Set and view team privileges" />
+      <Header
+        title="Manage Workgroup"
+        subtitle="Set and view team privileges"
+      />
       <Box
         m="40px 0 0 0"
         h="70vh"
@@ -115,14 +123,18 @@ const Team = () => {
             backgroundColor: colors.blueAccent[700],
           },
           "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-            color: `${colors.grey[100]}`
+            color: `${colors.grey[100]}`,
           },
         }}
       >
-        <DataGrid rows={mockDataTeam} columns={columns} components={{Toolbar: customToolBar}}></DataGrid>
+        <DataGrid
+          rows={mockDataTeam}
+          columns={columns}
+          components={{ Toolbar: customToolBar }}
+        ></DataGrid>
       </Box>
     </Box>
   );
 };
 
-export default Team;
+export default ManageWorkgroup;

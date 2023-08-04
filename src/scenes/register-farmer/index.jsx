@@ -20,7 +20,7 @@ const userSchema = yup.object().shape({
   confirmPassword: yup.string().required("Required."),
 });
 
-const AdminApprovedRegistration = () => {
+const Registration = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -36,8 +36,8 @@ const AdminApprovedRegistration = () => {
   return (
     <Box m="20px">
       <Header
-        title="Register a User"
-        subtitle="Register a readily admin-approved user."
+        title="Register Farmer"
+        subtitle="Register a farmer to your workgroup."
       />
       <Box marginTop="75px" p="55px">
         <Formik
@@ -157,4 +157,4 @@ const AdminApprovedRegistration = () => {
   );
 };
 
-export default AdminApprovedRegistration;
+export default Registration;

@@ -15,7 +15,7 @@ import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-
+import ElectricMeterOutlinedIcon from "@mui/icons-material/ElectricMeterOutlined";
 // user-added
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 
@@ -142,22 +142,22 @@ const Sidebar = () => {
             {/* End Label */}
 
             <Item
-              title="Manage Team"
-              to="/team"
+              title="Manage Workgroup"
+              to="/manage-workgroup"
               icon={<PeopleOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
-              title="Register a user"
-              to="/register"
+              title="Register Farmer"
+              to="/register-farmer"
               icon={<PersonOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Harvest Calendar"
-              to="/calendar"
+              to="/harvest-calendar"
               icon={<CalendarTodayOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -181,15 +181,22 @@ const Sidebar = () => {
             />
             <Item
               title="Aquatic Sensors Status"
-              to="/pie"
+              to="/aquatic-sensor-status"
               icon={<WaterDropOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Terrestrial Sensors Status"
-              to="/line"
+              to="/terrestrial-sensor-status"
               icon={<NatureOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Adjust System Thresholds"
+              to="/adjust-system-thresholds"
+              icon={<ElectricMeterOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
