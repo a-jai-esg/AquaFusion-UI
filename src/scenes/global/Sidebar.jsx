@@ -222,7 +222,7 @@ const Sidebar = () => {
             {/* End Label */}
             <Item
               title="Log Out"
-              to="/dashboard"
+              to="/logout"
               icon={<LogoutOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}

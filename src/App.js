@@ -1,36 +1,42 @@
 // hooks
+import { useState } from "react";
 import { ColorModeContext, useMode } from "./theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 
 // react router
 import { Routes, Route } from "react-router-dom";
 
+// login scenes
+import Login from "./login-scenes/login";
+
 // scenes
 import Topbar from "./scenes/global/Topbar";
 import Sidebar from "./scenes/global/Sidebar";
 import Dashboard from "./scenes/dashboard";
 import ManageWorkgroup from "./scenes/manage-workgroup";
-import Profile from "./scenes/Profile";
+import Profile from "./scenes/farm-administrator-profile";
 import Notifications from "./scenes/notifications";
 import HarvestCalendar from "./scenes/harvest-calendar";
 import AquaticSensorStatus from "./scenes/aquatic-sensor-status";
 import TerrestrialSensorStatus from "./scenes/terrestrial-sensor-status";
 import AdjustSystemThresholds from "./scenes/adjust-system-thresholds";
 import Registration from "./scenes/register-farmer";
-import TechnicalSupport from "./scenes/TechnicalSupport";
+import TechnicalSupport from "./scenes/technical-support";
+import Logout from "./scenes/logout";
 
 // data
 import { mockCalendarDates as dates } from "./data/mockData";
 
 export default function App() {
   const [theme, colorMode] = useMode();
+  const [emailAddress, setEmailAddress] = useState("");
+  const [password, setPassword] = useState("");
+  const [session, setSession] = useState(false);
 
-  return (
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <div className="app">
-          <Sidebar />
+  const dashboardMenu = () => {
+    return(
+      <div className="app">
+          <Sidebar/>
           <main className="content">
             <Topbar />
             <Routes>
@@ -47,10 +53,37 @@ export default function App() {
               <Route
                 path="/adjust-system-thresholds"
                 element={<AdjustSystemThresholds />}
-              /> 
+              />
+              <Route
+                path="/logout"
+                element={<Logout setEmail={setEmailAddress} setPassword={setPassword} setSession={setSession}/>}
+              />
             </Routes>
           </main>
         </div>
+    );
+  }
+
+  const loginPage = () => {
+    return(
+      <div className="app">
+        <main className="content">
+          <Routes>
+            <Route path="/" element={<Login setPassword={setPassword} setEmail={setEmailAddress} setSession={setSession}/>}/>
+          </Routes>
+        </main> 
+      </div>
+    );
+
+  }
+
+  return (
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {(session) ? dashboardMenu() : loginPage()
+        }
+        {console.log(session)}
       </ThemeProvider>
     </ColorModeContext.Provider>
   );
