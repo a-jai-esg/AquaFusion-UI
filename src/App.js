@@ -43,7 +43,7 @@ export default function App() {
               <Route path="/harvest-calendar" element={<HarvestCalendar />} date={dates} />
               <Route path="/terrestrial-sensor-status" element={<TerrestrialSensorStatus />} />
               <Route path="/aquatic-sensor-status" element={<AquaticSensorStatus />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/profile" element={<Profile userName="Jennie Kim" workgroupName="SOS Talamban" accountID="abcd182716jsfha211" emailAddress="jennie@aquafusion.com"/>} />
               <Route
                 path="/adjust-system-thresholds"
                 element={<AdjustSystemThresholds />}

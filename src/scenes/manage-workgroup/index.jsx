@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Typography, Box, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import {
@@ -15,6 +16,10 @@ import Header from "../../components/Header";
 const ManageWorkgroup = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
+  useEffect(() => {
+    document.title = "Manage Workgroup";
+  }, []);
 
   const customToolBar = () => {
     return (

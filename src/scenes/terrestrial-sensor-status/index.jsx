@@ -41,7 +41,7 @@ const TerrestrialSensorStatus = () => {
             flex="1 1 50%"
             backgroundColor={colors.primary[400]}
             ml="10px"
-            mr="10px"
+            mr="auto"
             p="10px"
             borderRadius="4px"
           >
@@ -59,7 +59,7 @@ const TerrestrialSensorStatus = () => {
           backgroundColor={colors.primary[400]}
           p="10px"
           ml="10px"
-          mr="10px"
+          mr="auto"
           borderRadius="4px"
         >
           <LineChartComponent

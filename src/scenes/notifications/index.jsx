@@ -1,7 +1,13 @@
 import { useEffect } from "react";
 import { Box } from "@mui/material";
 import { tokens } from "../../theme";
-import { DataGrid, GridToolbarColumnsButton, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton} from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridToolbarColumnsButton,
+  GridToolbarContainer,
+  GridToolbarExport,
+  GridToolbarFilterButton,
+} from "@mui/x-data-grid";
 import { mockDataContacts } from "../../data/mockData";
 import { useTheme } from "@mui/material";
 import Header from "../../components/Header";
@@ -11,18 +17,18 @@ const Notifications = () => {
   const colors = tokens(theme.palette.mode);
 
   useEffect(() => {
-    document.title = "Notifications";
+    document.title = "System Notifications";
   }, []);
 
-  const customToolBar =  () => {
+  const customToolBar = () => {
     return (
       <GridToolbarContainer>
-        <GridToolbarColumnsButton/>
-        <GridToolbarExport/>
-        <GridToolbarFilterButton/>
+        <GridToolbarColumnsButton />
+        <GridToolbarExport />
+        <GridToolbarFilterButton />
       </GridToolbarContainer>
     );
-  }
+  };
 
   const columns = [
     {
@@ -110,11 +116,15 @@ const Notifications = () => {
             backgroundColor: colors.blueAccent[700],
           },
           "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-            color: `${colors.grey[100]}`
+            color: `${colors.grey[100]}`,
           },
         }}
       >
-        <DataGrid rows={mockDataContacts} columns={columns} components={{Toolbar: customToolBar}}></DataGrid>
+        <DataGrid
+          rows={mockDataContacts}
+          columns={columns}
+          components={{ Toolbar: customToolBar }}
+        ></DataGrid>
       </Box>
     </Box>
   );

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FullCalendar, { formalDate } from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -18,6 +18,10 @@ const Calendar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [currentEvents, setCurrentEvents] = useState([]);
+
+  useEffect(() => {
+    document.title = "Harvest Calendar";
+  }, []);
 
   const handleDateClick = (selected) => {
     const title = prompt("Enter a planned event. ");

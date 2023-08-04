@@ -30,7 +30,7 @@ const Registration = () => {
   };
 
   useEffect(() => {
-    document.title = "Register";
+    document.title = "Register Farmer";
   }, []);
 
   return (
@@ -136,12 +136,11 @@ const Registration = () => {
                 }}
               >
                 <Button
-                  justifyContent="right"
                   type="submit"
                   color="secondary"
                   variant="contained"
                   sx={{
-                    gridColumn: "span 2",
+                    gridColumn: "span 4",
                     height: 75,
                     width: 512,
                   }}

@@ -79,17 +79,21 @@ const Dashboard = () => {
         <Box pt="20px" display="flex" justifyContent="space-between">
           {/* Line Graph */}
           <Box
-            flex="1 1 20%"
+            flex="1 1 50%"
             backgroundColor={colors.primary[400]}
             p="15px"
+            ml="auto"
+            mr="auto"
             borderRadius="4px"
           >
             <LineChartComponent data={dateData} graphTitle="Air Temperature" />
           </Box>
           <Box
-            flex="1 1 20%"
+            flex="1 1 50%"
             backgroundColor={colors.primary[400]}
             p="15px"
+            ml="15px"
+            mr="auto"
             borderRadius="4px"
           >
             <LineChartComponent
