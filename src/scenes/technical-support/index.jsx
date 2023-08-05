@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Box, useTheme, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
@@ -12,6 +13,10 @@ const TechnicalSupport = () => {
   const colors = tokens(theme.palette.mode);
 
   let navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "Technical Support";
+  }, []);
 
   const routeChange = () => {
     let path = "/about";

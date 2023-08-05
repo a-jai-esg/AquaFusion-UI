@@ -46,11 +46,12 @@ const Support = () => {
         <Typography
           variant="h4"
           color={colors.grey[100]}
-          fontWeight="300"
+          fontWeight="400"
           textAlign="center"
-          sx={{ marginBottom: "5px" }}
+          sx={{ marginTop: "25px", marginBottom: "25px" }}
         >
-          Call hotline number 123-4567 to request for an administrator account.
+          Call hotline number 123-4567 <br />
+          to request for an administrator account.
         </Typography>
         <Box noValidate sx={{ mt: 1 }}>
           <Button

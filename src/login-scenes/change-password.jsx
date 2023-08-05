@@ -15,7 +15,7 @@ const ForgottenPassword = () => {
   const [confirmNewPasswordField, setConfirmNewPasswordField] = useState("");
 
   useEffect(() => {
-    document.title = "Forgotten Password";
+    document.title = "Enter New Password";
   }, []);
 
   let navigate = useNavigate();
@@ -27,6 +27,11 @@ const ForgottenPassword = () => {
 
   const routeChangeLogin = () => {
     let path = "/";
+    navigate(path);
+  };
+
+  const routeChangeSupport = () => {
+    let path = "/support";
     navigate(path);
   };
 
@@ -46,7 +51,7 @@ const ForgottenPassword = () => {
         }}
       >
         <LogoComponent
-          text="Forgotten Password?"
+          text="Enter Your New Password"
           component="h1"
           variant="h2"
           fontWeight={600}
@@ -98,7 +103,7 @@ const ForgottenPassword = () => {
               <Link
                 component="button"
                 variant="body2"
-                onClick={routeChangeLogin}
+                onClick={routeChangeSupport}
                 sx={{
                   color: "#ffffff",
                 }}
