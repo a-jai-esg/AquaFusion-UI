@@ -1,7 +1,7 @@
 import { useTheme, Typography } from "@mui/material";
 import { tokens } from "../theme";
 
-const LogoComponent = ({ text }) => {
+const LogoComponent = ({ text, component, variant, fontWeight }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   return (
@@ -19,9 +19,9 @@ const LogoComponent = ({ text }) => {
         style={{ cursor: "pointer" }}
       />
       <Typography
-        component="h1"
-        variant="h2"
-        fontWeight={600}
+        component={component}
+        variant={variant}
+        fontWeight={fontWeight}
         padding="25px"
         margin="5px"
         color={colors.greenAccent[500]}

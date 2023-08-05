@@ -7,22 +7,21 @@ import Container from "@mui/material/Container";
 import { Box, Button, TextField, useTheme } from "@mui/material";
 import { tokens } from "../theme";
 
-const Login = ({ setPassword, setEmail, setSession }) => {
+const ForgottenPassword = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
+  const [workgroupField, setWorkgroupField] = useState("");
   const [emailField, setEmailField] = useState("");
-  const [passwordField, setPasswordField] = useState("");
 
-  // use effect to set title
   useEffect(() => {
-    document.title = "Login to AquaFusion";
+    document.title = "Forgotten Password";
   }, []);
 
   let navigate = useNavigate();
 
-  const routeChangeForgottenPassword = () => {
-    let path = "/forgotten-password";
+  const routeChangeFindAccount = () => {
+    let path = "/change-password";
     navigate(path);
   };
 
@@ -31,11 +30,12 @@ const Login = ({ setPassword, setEmail, setSession }) => {
     navigate(path);
   };
 
-  const handleClick = (event) => {
-    setEmail(emailField);
-    setPassword(passwordField);
-    setSession(true);
+  const routeChangeLogin = () => {
+    let path = "/";
+    navigate(path);
   };
+
+  const handleClick = (event) => {};
 
   return (
     <Container maxWidth="md">
@@ -51,7 +51,7 @@ const Login = ({ setPassword, setEmail, setSession }) => {
         }}
       >
         <LogoComponent
-          text="Admin Login"
+          text="Forgotten Password?"
           component="h1"
           variant="h2"
           fontWeight={600}
@@ -61,31 +61,31 @@ const Login = ({ setPassword, setEmail, setSession }) => {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
+            id="workgroup"
+            label="Workgroup Name"
+            name="workgroupName"
             onChange={(e) => {
-              setEmailField(e.target.value);
+              setWorkgroupField(e.target.value);
             }}
-            autoComplete="email"
+            autoComplete="workgroup-name"
             autoFocus
           />
           <TextField
             margin="normal"
             required
             fullWidth
-            name="password"
+            name="email"
             onChange={(e) => {
-              setPasswordField(e.target.value);
+              setEmailField(e.target.value);
             }}
-            label="Password"
-            type="password"
-            id="password"
+            label="Email"
+            type="email"
+            id="email"
             autoComplete="current-password"
           />
           <Button
             fullWidth
-            onClick={handleClick}
+            onClick={routeChangeFindAccount}
             variant="contained"
             color="secondary"
             sx={{
@@ -95,7 +95,7 @@ const Login = ({ setPassword, setEmail, setSession }) => {
               gridColumn: "span 4",
             }}
           >
-            Login
+            Find Account
           </Button>
           <Grid container>
             <Grid item xs>
@@ -114,12 +114,12 @@ const Login = ({ setPassword, setEmail, setSession }) => {
               <Link
                 component="button"
                 variant="body2"
-                onClick={routeChangeForgottenPassword}
+                onClick={routeChangeLogin}
                 sx={{
                   color: "#ffffff",
                 }}
               >
-                Forgotten Password?
+                Remembered Account? Login here.
               </Link>
             </Grid>
           </Grid>
@@ -129,4 +129,4 @@ const Login = ({ setPassword, setEmail, setSession }) => {
   );
 };
 
-export default Login;
+export default ForgottenPassword;

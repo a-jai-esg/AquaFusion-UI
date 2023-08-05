@@ -8,6 +8,10 @@ import { Routes, Route } from "react-router-dom";
 
 // login scenes
 import Login from "./login-scenes/login";
+import ForgottenPassword from "./login-scenes/forgotten-password";
+import ChangePassword from "./login-scenes/change-password";
+import Success from "./login-scenes/cards/success";
+import Support from "./login-scenes/cards/support-card";
 
 // scenes
 import Topbar from "./scenes/global/Topbar";
@@ -22,6 +26,7 @@ import TerrestrialSensorStatus from "./scenes/terrestrial-sensor-status";
 import AdjustSystemThresholds from "./scenes/adjust-system-thresholds";
 import Registration from "./scenes/register-farmer";
 import TechnicalSupport from "./scenes/technical-support";
+import About from "./scenes/about-system";
 import Logout from "./scenes/logout";
 
 // data
@@ -46,10 +51,11 @@ export default function App() {
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/register-farmer" element={<Registration />} />
               <Route path="/support" element={<TechnicalSupport />} />
+              <Route path="/about" element={<About />} />
               <Route path="/harvest-calendar" element={<HarvestCalendar />} date={dates} />
               <Route path="/terrestrial-sensor-status" element={<TerrestrialSensorStatus />} />
               <Route path="/aquatic-sensor-status" element={<AquaticSensorStatus />} />
-              <Route path="/profile" element={<Profile userName="Jennie Kim" workgroupName="SOS Talamban" accountID="abcd182716jsfha211" emailAddress="jennie@aquafusion.com"/>} />
+              <Route path="/profile" element={<Profile userName="Jennie Kim" workgroupName="SOS Talamban" accountID="abcd182716jsfha211" emailAddress={emailAddress}/>} />
               <Route
                 path="/adjust-system-thresholds"
                 element={<AdjustSystemThresholds />}
@@ -70,6 +76,10 @@ export default function App() {
         <main className="content">
           <Routes>
             <Route path="/" element={<Login setPassword={setPassword} setEmail={setEmailAddress} setSession={setSession}/>}/>
+            <Route path="/forgotten-password" element={<ForgottenPassword/>}/>
+            <Route path="/change-password" element={<ChangePassword/>}/>
+            <Route path="/change-success" element={<Success/>}/>
+            <Route path="/support" element={<Support/>}/>
           </Routes>
         </main> 
       </div>
@@ -83,7 +93,6 @@ export default function App() {
         <CssBaseline />
         {(session) ? dashboardMenu() : loginPage()
         }
-        {console.log(session)}
       </ThemeProvider>
     </ColorModeContext.Provider>
   );

@@ -1,4 +1,5 @@
-import { Box, useTheme, Typography } from "@mui/material";
+import { Box, useTheme, Typography, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -9,6 +10,13 @@ import { tokens } from "../../theme";
 const TechnicalSupport = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
+  let navigate = useNavigate();
+
+  const routeChange = () => {
+    let path = "/about";
+    navigate(path);
+  };
 
   return (
     <Box m="25px">
@@ -106,6 +114,19 @@ const TechnicalSupport = () => {
           </AccordionSummary>
           <AccordionDetails>Hello, World.</AccordionDetails>
         </Accordion>
+      </Box>
+      <Box mt="25px" ml="25px">
+        <Button
+          variant="filled"
+          color={colors.grey[100]}
+          sx={{
+            borderColor: "inherit",
+            color: "#ffffff",
+          }}
+          onClick={routeChange}
+        >
+          About AquaFusion
+        </Button>
       </Box>
     </Box>
   );
