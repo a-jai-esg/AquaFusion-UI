@@ -11,6 +11,8 @@ import {
 import { mockDataContacts } from "../../data/mockData";
 import { useTheme } from "@mui/material";
 import Header from "../../components/Header";
+import NotificationTable from "../../components/NotificationTable";
+import { notificationDataToday } from "../../data/mockLineData";
 
 const Notifications = () => {
   const theme = useTheme();
@@ -20,80 +22,14 @@ const Notifications = () => {
     document.title = "System Notifications";
   }, []);
 
-  const customToolBar = () => {
-    return (
-      <GridToolbarContainer>
-        <GridToolbarColumnsButton />
-        <GridToolbarExport />
-        <GridToolbarFilterButton />
-      </GridToolbarContainer>
-    );
-  };
-
-  const columns = [
-    {
-      field: "id",
-      flex: 0.5,
-      type: "number",
-      headerName: "ID",
-      fontWeight: "bold",
-    },
-    {
-      field: "name",
-      flex: 2,
-      headerName: "Name",
-      fontWeight: "bold",
-      cellClassName: "name-column--cell",
-    },
-    {
-      field: "email",
-      flex: 1,
-      headerName: "Email Address",
-      cellClassName: "email-column--cell",
-    },
-    {
-      flex: 0.5,
-      field: "age",
-      headerName: "Age",
-      type: "number",
-      headerAlign: "left",
-      align: "left",
-      cellClassName: "age-column--cell",
-    },
-    {
-      field: "phone",
-      headerName: "Phone Number",
-    },
-    {
-      field: "address",
-      flex: 1,
-      headerName: "Address",
-    },
-    {
-      field: "city",
-      flex: 0.5,
-      headerName: "City",
-    },
-    {
-      field: "zipCode",
-      flex: 0.5,
-      headerName: "Zip Code",
-    },
-    {
-      field: "registrarId",
-      headerName: "Registrar ID",
-      flex: 0.5,
-      type: "number",
-      cellClassName: "registrar-id-column--cell",
-    },
-  ];
-
   return (
     <Box m="20px;">
       <Header title="Notifications" subtitle="View and Manage Notifications" />
+      {/* Notification Box */}
       <Box
-        m="40px 0 0 0"
-        h="70vh"
+        flex="1 1 80%"
+        ml="15px"
+        h="100vh"
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",
@@ -116,15 +52,15 @@ const Notifications = () => {
             backgroundColor: colors.blueAccent[700],
           },
           "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+            borderTop: "none",
+            backgroundColor: colors.blueAccent[700],
+          },
+          "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
             color: `${colors.grey[100]}`,
           },
         }}
       >
-        <DataGrid
-          rows={mockDataContacts}
-          columns={columns}
-          components={{ Toolbar: customToolBar }}
-        ></DataGrid>
+        <NotificationTable notificationData={notificationDataToday} />
       </Box>
     </Box>
   );

@@ -73,7 +73,7 @@ const Dashboard = () => {
               },
             }}
           >
-            <NotificationTable notificationDataToday={notificationDataToday} />
+            <NotificationTable notificationData={notificationDataToday} />
           </Box>
         </Box>
         <Box pt="20px" display="flex" justifyContent="space-between">

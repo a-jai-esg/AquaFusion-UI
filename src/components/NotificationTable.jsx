@@ -5,7 +5,7 @@ import {
   GridToolbarExport,
 } from "@mui/x-data-grid";
 
-const NotificationTable = ({ notificationDataToday }) => {
+const NotificationTable = ({ notificationData }) => {
   const columns = [
     { field: "id", headerName: "Notification ID", fontWeight: "bold" },
     { field: "time", headerName: "Time", fontWeight: "bold" },
@@ -30,7 +30,7 @@ const NotificationTable = ({ notificationDataToday }) => {
   return (
     <>
       <DataGrid
-        rows={notificationDataToday}
+        rows={notificationData}
         columns={columns}
         components={{ Toolbar: customToolBar }}
       ></DataGrid>
