@@ -1,14 +1,6 @@
 import { useEffect } from "react";
 import { Box } from "@mui/material";
 import { tokens } from "../../theme";
-import {
-  DataGrid,
-  GridToolbarColumnsButton,
-  GridToolbarContainer,
-  GridToolbarExport,
-  GridToolbarFilterButton,
-} from "@mui/x-data-grid";
-import { mockDataContacts } from "../../data/mockData";
 import { useTheme } from "@mui/material";
 import Header from "../../components/Header";
 import NotificationTable from "../../components/NotificationTable";

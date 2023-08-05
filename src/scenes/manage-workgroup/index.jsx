@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Typography, Box, useTheme } from "@mui/material";
+import { Typography, Box, useTheme, Button } from "@mui/material";
 import { tokens } from "../../theme";
 import {
   DataGrid,
@@ -40,24 +40,28 @@ const ManageWorkgroup = () => {
       field: "name",
       flex: 1,
       headerName: "Name",
+      editable: true,
       cellClassName: "name-column--cell",
     },
     {
       field: "email",
       flex: 1,
       headerName: "Email Address",
+      editable: true,
       cellClassName: "email-column--cell",
     },
     {
       field: "age",
       headerName: "Member's Age",
       type: "number",
+      editable: true,
       headerAlign: "left",
       align: "left",
       cellClassName: "age-column--cell",
     },
     {
       field: "phone",
+      editable: true,
       headerName: "Phone Number",
     },
     {
@@ -66,30 +70,6 @@ const ManageWorkgroup = () => {
       headerAlign: "center",
       align: "center",
       flex: 1,
-      renderCell: ({ row: { access } }) => {
-        return (
-          <Box
-            width="60%"
-            m="0 auto"
-            p="5px"
-            display="flex"
-            justifyContent="center"
-            backgroundColor={
-              access === "admin"
-                ? colors.greenAccent[600]
-                : colors.greenAccent[700]
-            }
-            borderRadius="4px"
-          >
-            {access === "admin" && <AdminPanelSettingsOutlinedIcon />}
-            {access === "manager" && <SecurityOutlinedIcon />}
-            {access === "user" && <LockOpenOutlinedIcon />}
-            <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-              {access}
-            </Typography>
-          </Box>
-        );
-      },
     },
   ];
 
@@ -133,6 +113,7 @@ const ManageWorkgroup = () => {
         }}
       >
         <DataGrid
+          editMode="row"
           rows={mockDataTeam}
           columns={columns}
           components={{ Toolbar: customToolBar }}
