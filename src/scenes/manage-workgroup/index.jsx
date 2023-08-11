@@ -8,9 +8,6 @@ import {
   GridToolbarExport,
 } from "@mui/x-data-grid";
 import { mockDataTeam } from "../../data/mockData";
-import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
-import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
-import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import Header from "../../components/Header";
 
 const ManageWorkgroup = () => {
@@ -50,38 +47,19 @@ const ManageWorkgroup = () => {
       editable: true,
       cellClassName: "email-column--cell",
     },
-    {
-      field: "age",
-      headerName: "Member's Age",
-      type: "number",
-      editable: true,
-      headerAlign: "left",
-      align: "left",
-      cellClassName: "age-column--cell",
-    },
-    {
-      field: "phone",
-      editable: true,
-      headerName: "Phone Number",
-    },
-    {
-      field: "access",
-      headerName: "System Privileges",
-      headerAlign: "center",
-      align: "center",
-      flex: 1,
-    },
   ];
 
   return (
-    <Box m="20px;">
+    <Box m="20px">
       <Header
         title="Manage Workgroup"
         subtitle="Set and view team privileges"
       />
       <Box
-        m="40px 0 0 0"
-        h="70vh"
+        m="20px 0 0 0"
+        h="50vh"
+        p="30px"
+        backgroundColor={colors.primary[400]}
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",

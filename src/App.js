@@ -13,7 +13,7 @@ import ChangePassword from "./login-scenes/change-password";
 import Success from "./login-scenes/cards/success";
 import Support from "./login-scenes/cards/support-card";
 
-// scenes
+// dashboard scenes
 import Topbar from "./scenes/global/Topbar";
 import Sidebar from "./scenes/global/Sidebar";
 import Dashboard from "./scenes/dashboard";
@@ -28,6 +28,7 @@ import Registration from "./scenes/register-farmer";
 import TechnicalSupport from "./scenes/technical-support";
 import About from "./scenes/about-system";
 import Logout from "./scenes/logout";
+import ApproveRegistrationRequests from "./scenes/register-farmer/approve-farmers-index";
 
 // data
 import { mockCalendarDates as dates } from "./data/mockData";
@@ -50,6 +51,7 @@ export default function App() {
               <Route path="/manage-workgroup" element={<ManageWorkgroup />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/register-farmer" element={<Registration />} />
+              <Route path="/register-farmer/requests" element={<ApproveRegistrationRequests />} />
               <Route path="/support" element={<TechnicalSupport />} />
               <Route path="/about" element={<About />} />
               <Route path="/harvest-calendar" element={<HarvestCalendar />} date={dates} />
@@ -91,7 +93,8 @@ export default function App() {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        {(session) ? dashboardMenu() : loginPage()
+        {//(session) ? dashboardMenu() : loginPage()
+          dashboardMenu()
         }
       </ThemeProvider>
     </ColorModeContext.Provider>

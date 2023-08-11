@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { Box, TextField, Button, useTheme } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { Box, TextField, Button, useTheme, Typography } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { tokens } from "../../theme";
@@ -29,6 +30,12 @@ const Registration = () => {
     console.log(values);
   };
 
+  let navigate = useNavigate();
+
+  const routeChange = () => {
+    navigate("/register-farmer/requests");
+  };
+
   useEffect(() => {
     document.title = "Register Farmer";
   }, []);
@@ -39,7 +46,14 @@ const Registration = () => {
         title="Register Farmer"
         subtitle="Register a farmer to your workgroup."
       />
-      <Box marginTop="75px" p="55px">
+      <Box marginTop="75px" p="30px" backgroundColor={colors.primary[400]}>
+        <Typography
+          variant="h5"
+          color={colors.greenAccent[500]}
+          sx={{ pb: "10px", pt: "10px" }}
+        >
+          Register a farmer directly to the workgroup.
+        </Typography>
         <Formik
           onSubmit={handleFormSubmit}
           initialValues={initialValues}
@@ -151,6 +165,19 @@ const Registration = () => {
             </form>
           )}
         </Formik>
+      </Box>
+      <Box mt="25px" ml="25px">
+        <Button
+          variant="filled"
+          color={colors.grey[100]}
+          sx={{
+            borderColor: "inherit",
+            color: "#ffffff",
+          }}
+          onClick={routeChange}
+        >
+          Approve Pending Farmer Registration
+        </Button>
       </Box>
     </Box>
   );
