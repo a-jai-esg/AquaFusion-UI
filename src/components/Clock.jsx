@@ -20,8 +20,8 @@ const Clock = () => {
     <Box
       display="flex"
       backgroundColor={colors.primary[400]}
-      borderRadius="3px"
-      padding="10px"
+      borderRadius="5px"
+      padding="5px"
     >
       <Typography variant="h3" color={colors.primary[100]} fontWeight="400">
         {clockTime}

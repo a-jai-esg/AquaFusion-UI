@@ -1,7 +1,10 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Box, useTheme, Typography, Button } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
+
+// modals
+import ChangePasswordModal from "../../components/modals/ChangePasswordModal";
 
 const Profile = ({ userName, accountID, emailAddress, workgroupName }) => {
   useEffect(() => {
@@ -10,6 +13,21 @@ const Profile = ({ userName, accountID, emailAddress, workgroupName }) => {
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+
+  const handleOpenPasswordModal = () => {
+    setIsPasswordModalOpen(true);
+  };
+
+  const handleClosePasswordModal = () => {
+    setIsPasswordModalOpen(false);
+  };
+
+  const handleChangePassword = (newPassword) => {
+    // Implement your password change logic here
+    console.log("Changing password to:", newPassword);
+  };
 
   return (
     <Box m="20px">
@@ -115,7 +133,8 @@ const Profile = ({ userName, accountID, emailAddress, workgroupName }) => {
           <Box mt="5px" textAlign="center">
             <Button
               variant="filled"
-              color={colors.grey[100]}
+              color="secondary"
+              onClick={handleOpenPasswordModal}
               sx={{
                 borderColor: "inherit",
                 color: "#ffffff",
@@ -123,6 +142,11 @@ const Profile = ({ userName, accountID, emailAddress, workgroupName }) => {
             >
               Change Password
             </Button>
+            <ChangePasswordModal
+              isOpen={isPasswordModalOpen}
+              onRequestClose={handleClosePasswordModal}
+              onChangePassword={handleChangePassword}
+            />
           </Box>
         </Box>
       </Box>
