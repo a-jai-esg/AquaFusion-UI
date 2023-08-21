@@ -8,8 +8,8 @@ export const dateData = [
 ];
 
 export const notificationDataToday = [
-    { id: 0, time: "13:15", name: "[Ultrasonic] Water Level 27.8 cm", type: "Aquatic"},
-    { id: 1, time: "13:15", name: "[DHT] Air Temperature reached 31.5 degrees", type: "Terrestrial"},
+    { id: 0, time: "13:15", name: "[Ultrasonic] Water Level 27.8 cm", type: "Aquatic", criticality: "Critical"},
+    { id: 1, time: "13:15", name: "[DHT] Air Temperature reached 31.5 degrees", type: "Terrestrial", criticality: "Not Critical"},
 ];
 
 export const aquaticSensorData = [

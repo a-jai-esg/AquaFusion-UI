@@ -24,7 +24,7 @@ const Dashboard = () => {
         <Header title="Dashboard" subtitle="Today's Activity" />
       </Box>
       <Box>
-        <Box display="flex" justifyContent="space-between">
+        <Box pt="10px" display="flex" justifyContent="space-between">
           {/* Line Graph */}
           <Box
             flex="1 1 20%"
@@ -40,7 +40,10 @@ const Dashboard = () => {
 
           {/* Notification Box */}
           <Box
+            display="flex"
             flex="1 1 80%"
+            backgroundColor={colors.primary[400]}
+            padding="15px"
             ml="15px"
             h="100vh"
             sx={{
@@ -73,7 +76,10 @@ const Dashboard = () => {
               },
             }}
           >
-            <NotificationTable notificationData={notificationDataToday} />
+            <NotificationTable
+              notificationData={notificationDataToday}
+              isDefault={false}
+            />
           </Box>
         </Box>
         <Box pt="20px" display="flex" justifyContent="space-between">

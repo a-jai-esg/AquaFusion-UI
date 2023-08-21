@@ -5,15 +5,32 @@ import {
   GridToolbarExport,
 } from "@mui/x-data-grid";
 
-const NotificationTable = ({ notificationData }) => {
+const NotificationTable = ({ notificationData, isDefault }) => {
+  var maxWidth = 0;
+  isDefault ? (maxWidth = 400) : (maxWidth = 200);
+
   const columns = [
     { field: "id", headerName: "Notification ID", fontWeight: "bold" },
     { field: "time", headerName: "Time", fontWeight: "bold" },
-    { field: "name", headerName: "Notification", flex: 1, fontWeight: "bold" },
+    {
+      field: "name",
+      headerName: "Notification",
+      flex: 2,
+      maxWidth: maxWidth,
+      fontWeight: "bold",
+    },
     {
       field: "type",
       headerName: "Notification Type",
-      flex: 1,
+      flex: 2,
+      maxWidth: maxWidth,
+      fontWeight: "bold",
+    },
+    {
+      field: "criticality",
+      headerName: "Criticality",
+      flex: 2,
+      maxWidth: maxWidth,
       fontWeight: "bold",
     },
   ];
@@ -32,6 +49,7 @@ const NotificationTable = ({ notificationData }) => {
       <DataGrid
         rows={notificationData}
         columns={columns}
+        autoHeight
         components={{ Toolbar: customToolBar }}
       ></DataGrid>
     </>

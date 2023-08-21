@@ -67,7 +67,16 @@ const Sidebar = () => {
         <Menu iconShape="square">
           <MenuItem
             onClick={() => setIsCollapsed(!isCollapsed)}
-            icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
+            icon={
+              isCollapsed ? (
+                <img
+                  alt="logo"
+                  width="20px"
+                  height="25px"
+                  src={`../../assets/logo_image.png`}
+                />
+              ) : undefined
+            }
             style={{
               margin: "15px 0 20px 0",
               color: colors.grey[100],
@@ -81,11 +90,6 @@ const Sidebar = () => {
                 alignItems="center"
                 ml="15px"
               >
-                {/*
-                  <Typography variant="h3" color={colors.grey[100]}>
-                    AquaFusion
-                  </Typography>
-                */}
                 <AquaFusionSideBarElement />
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />

@@ -52,7 +52,10 @@ const Notifications = () => {
           },
         }}
       >
-        <NotificationTable notificationData={notificationDataToday} />
+        <NotificationTable
+          notificationData={notificationDataToday}
+          isDefault={true}
+        />
       </Box>
     </Box>
   );
