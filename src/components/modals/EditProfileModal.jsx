@@ -6,20 +6,22 @@ import {
   Button,
   Typography,
   TextField,
+  Input,
 } from "@mui/material";
 import { tokens } from "../../theme";
 
-const ChangePasswordModal = ({ isOpen, onRequestClose, onChangePassword }) => {
+const EditProfileModal = ({ isOpen, onRequestClose, onEditProfile }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  // useStates for the textfields
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmNewPassword, setConfirmNewPasswordField] = useState("");
+  // useStates for the textfield and input
+  const [newProfileName, setNewProfileName] = useState("");
+  const [newProfilePicture, setNewProfilePicture] = useState("");
 
-  const handlePasswordChange = () => {
-    onChangePassword(newPassword);
-    setNewPassword("");
+  const handleEditProfile = () => {
+    onEditProfile(newProfileName, newProfilePicture);
+    setNewProfileName("");
+    setNewProfilePicture("");
     onRequestClose();
   };
 
@@ -33,7 +35,6 @@ const ChangePasswordModal = ({ isOpen, onRequestClose, onChangePassword }) => {
           left: "50%",
           transform: "translate(-50%, -50%)",
           bgcolor: colors.primary[400],
-          //bgcolor: "background.paper",
           boxShadow: 24,
           p: 4,
           minWidth: 300,
@@ -46,39 +47,37 @@ const ChangePasswordModal = ({ isOpen, onRequestClose, onChangePassword }) => {
           gutterBottom
           sx={{ paddingBottom: "5px" }}
         >
-          Change Password
+          Edit Profile
         </Typography>
-        <TextField
-          type="password"
-          label="New Password"
-          variant="outlined"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
+        <Input
+          type="file"
+          label="Choose a new picture for your profile"
+          onChange={(e) => setNewProfilePicture(e.target.files[0])}
           fullWidth
           sx={{ mb: 2 }}
         />
         <TextField
-          type="password"
-          label="Confirm New Password"
+          type="name"
+          label="Enter your new name"
           variant="outlined"
-          value={confirmNewPassword}
-          onChange={(e) => setConfirmNewPasswordField(e.target.value)}
+          value={newProfileName}
+          onChange={(e) => setNewProfileName(e.target.value)}
           fullWidth
           sx={{ mb: 4 }}
         />
         <Button
           variant="contained"
           color="secondary"
-          onClick={handlePasswordChange}
+          onClick={handleEditProfile}
           sx={{ mr: 2 }}
         >
-          Change Password
+          Edit Profile
         </Button>
         <Button
           variant="outlined"
           onClick={() => {
-            setConfirmNewPasswordField("");
-            setNewPassword("");
+            setNewProfilePicture("");
+            setNewProfileName("");
             onRequestClose();
           }}
           color="secondary"
@@ -90,4 +89,4 @@ const ChangePasswordModal = ({ isOpen, onRequestClose, onChangePassword }) => {
   );
 };
 
-export default ChangePasswordModal;
+export default EditProfileModal;

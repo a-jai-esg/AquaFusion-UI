@@ -5,6 +5,7 @@ import Header from "../../components/Header";
 
 // modals
 import ChangePasswordModal from "../../components/modals/ChangePasswordModal";
+import EditProfileModal from "../../components/modals/EditProfileModal";
 
 const Profile = ({ userName, accountID, emailAddress, workgroupName }) => {
   useEffect(() => {
@@ -15,7 +16,9 @@ const Profile = ({ userName, accountID, emailAddress, workgroupName }) => {
   const colors = tokens(theme.palette.mode);
 
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
 
+  // for password modals
   const handleOpenPasswordModal = () => {
     setIsPasswordModalOpen(true);
   };
@@ -25,8 +28,20 @@ const Profile = ({ userName, accountID, emailAddress, workgroupName }) => {
   };
 
   const handleChangePassword = (newPassword) => {
-    // Implement your password change logic here
-    console.log("Changing password to:", newPassword);
+    alert("Changing password to:", newPassword);
+  };
+
+  // for edit profile modals
+  const handleOpenEditModal = () => {
+    setIsEditProfileModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditProfileModalOpen(false);
+  };
+
+  const handleEditProfile = (newProfileName, newProfilePicture) => {
+    alert("Succesfully edited your profile!");
   };
 
   return (
@@ -118,10 +133,10 @@ const Profile = ({ userName, accountID, emailAddress, workgroupName }) => {
               {emailAddress}
             </Typography>
           </Box>
-
           <Box mt="50px" textAlign="center">
             <Button
               variant="outlined"
+              onClick={handleOpenEditModal}
               sx={{
                 borderColor: "#ffffff",
                 color: "inherit",
@@ -129,6 +144,11 @@ const Profile = ({ userName, accountID, emailAddress, workgroupName }) => {
             >
               Edit Profile
             </Button>
+            <EditProfileModal
+              isOpen={isEditProfileModalOpen}
+              onRequestClose={handleCloseEditModal}
+              onEditProfile={handleEditProfile}
+            />
           </Box>
           <Box mt="5px" textAlign="center">
             <Button
