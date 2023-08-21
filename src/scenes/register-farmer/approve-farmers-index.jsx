@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, useTheme, Typography } from "@mui/material";
+import { Box, Button, useTheme } from "@mui/material";
+import CheckBoxOutlined from "@mui/icons-material/CheckBoxOutlined";
 import { tokens } from "../../theme";
 import {
   DataGrid,
@@ -42,24 +43,33 @@ const ApproveRegistrationRequests = () => {
     },
     {
       field: "name",
-      flex: 1,
+      flex: 3,
       headerName: "Name",
       editable: true,
       cellClassName: "name-column--cell",
     },
     {
       field: "email",
-      flex: 1,
+      flex: 2,
       headerName: "Email Address",
       editable: true,
       cellClassName: "email-column--cell",
     },
     {
-      field: "approved",
+      field: "Approve",
       flex: 1,
-      headerName: "Approval",
-      editable: true,
-      cellClassName: "email-column--cell",
+      headerName: "Approve Registration Request",
+      width: 200,
+      renderCell: (params) => (
+        <Button
+          onClick={() => handleApprove(params.id)}
+          variant="contained"
+          color="secondary"
+          marginLeft="50%"
+        >
+          Approve Request
+        </Button>
+      ),
     },
   ];
 

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Typography, Box, useTheme, Button } from "@mui/material";
+import { Box, useTheme, Button } from "@mui/material";
 import { tokens } from "../../theme";
 import {
   DataGrid,
@@ -9,6 +9,7 @@ import {
 } from "@mui/x-data-grid";
 import { mockDataTeam } from "../../data/mockData";
 import Header from "../../components/Header";
+import { red } from "@mui/material/colors";
 
 const ManageWorkgroup = () => {
   const theme = useTheme();
@@ -30,22 +31,37 @@ const ManageWorkgroup = () => {
   const columns = [
     {
       field: "id",
+      flex: 1,
       headerName: "Member ID",
       fontWeight: "bold",
     },
     {
       field: "name",
-      flex: 1,
+      flex: 3,
       headerName: "Name",
       editable: true,
       cellClassName: "name-column--cell",
     },
     {
       field: "email",
-      flex: 1,
+      flex: 2,
       headerName: "Email Address",
       editable: true,
       cellClassName: "email-column--cell",
+    },
+    {
+      field: "delete",
+      headerName: "Delete Farmer",
+      width: 100,
+      renderCell: (params) => (
+        <Button
+          onClick={() => handleDelete(params.id)}
+          variant="contained"
+          color="secondary"
+        >
+          Delete
+        </Button>
+      ),
     },
   ];
 

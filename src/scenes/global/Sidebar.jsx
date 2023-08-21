@@ -18,6 +18,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ElectricMeterOutlinedIcon from "@mui/icons-material/ElectricMeterOutlined";
 // user-added
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
+import AquaFusionSideBarElement from "../../components/AquaFusionSidebarElement";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -80,9 +81,12 @@ const Sidebar = () => {
                 alignItems="center"
                 ml="15px"
               >
-                <Typography variant="h3" color={colors.grey[100]}>
-                  AquaFusion
-                </Typography>
+                {/*
+                  <Typography variant="h3" color={colors.grey[100]}>
+                    AquaFusion
+                  </Typography>
+                */}
+                <AquaFusionSideBarElement />
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
                 </IconButton>
