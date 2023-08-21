@@ -93,8 +93,8 @@ export default function App() {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        {//(session) ? dashboardMenu() : loginPage()
-          dashboardMenu()
+        {
+          (session) ? dashboardMenu() : loginPage()
         }
       </ThemeProvider>
     </ColorModeContext.Provider>
