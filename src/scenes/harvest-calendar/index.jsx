@@ -1,32 +1,37 @@
 import { useState, useEffect } from "react";
-import FullCalendar, { formalDate } from "@fullcalendar/react";
+import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
 
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemText,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import SetHarvestCalendarModal from "../../components/modals/SetHarvestCalendarModal";
+
+import { Box, useTheme } from "@mui/material";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
+import { date } from "yup";
 
 const Calendar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [currentEvents, setCurrentEvents] = useState([]);
 
   useEffect(() => {
     document.title = "Harvest Calendar";
   }, []);
 
-  const handleDateClick = (selected) => {
-    const title = prompt("Enter a planned event. ");
-    const calendarApi = selected.view.calendar;
-    calendarApi.unselect();
+  // useStates for the event and set harvest calendar modal
+  const [harvestCalendarModalOpen, setHarvestCalendarModalOpen] =
+    useState(false);
+  const [selectedDate, setSelectedDate] = useState();
+
+  const handleDateClick = (info) => {
+    setSelectedDate(info.date);
+    setHarvestCalendarModalOpen(true);
+  };
+
+  const handleCloseSetHarvestCalendarModal = () => {
+    setSelectedDate(null);
+    setHarvestCalendarModalOpen(false);
   };
 
   return (
@@ -40,15 +45,22 @@ const Calendar = () => {
           <Box flex="1 1 100%" ml="15px">
             <FullCalendar
               height="75vh"
-              plugins={[dayGridPlugin, timeGridPlugin]}
+              plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
               initialView="dayGridMonth"
+              editable={true}
+              dateClick={handleDateClick}
               weekends={true}
               headerToolbar={{
                 left: "prev, next today",
                 center: "title",
                 right: "dayGridMonth, timeGridWeek, timeGridDay",
               }}
-            ></FullCalendar>
+            />
+            <SetHarvestCalendarModal
+              isOpen={harvestCalendarModalOpen}
+              onRequestClose={handleCloseSetHarvestCalendarModal}
+              selectedDate={selectedDate}
+            />
           </Box>
         </Box>
       </Box>
