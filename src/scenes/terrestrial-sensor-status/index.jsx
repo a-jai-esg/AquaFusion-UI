@@ -29,7 +29,7 @@ const TerrestrialSensorStatus = () => {
   };
 
   const humidityData = processData("2"); // Humidity
-  const airTemperatureData = processData("6"); // Air Temperature
+  const airTemperatureData = processData("3"); // Air Temperature
   const ultrasonicTerrestrialData = processData("4"); // Ultrasonic Terrestrial
 
   return (
@@ -70,7 +70,7 @@ const TerrestrialSensorStatus = () => {
               data={humidityData}
               dataKey="value"
               timestamp="timestamp"
-              graphTitle="Air Humidity (g/m3)"
+              graphTitle="Air Humidity (%)"
             />
           </Box>
         </Box>
@@ -89,7 +89,7 @@ const TerrestrialSensorStatus = () => {
             data={ultrasonicTerrestrialData}
             dataKey="value"
             timestamp="timestamp"
-            graphTitle="Plant Growth Statistics"
+            graphTitle="Plant Growth (cm)"
           />
         </Box>
       </Box>

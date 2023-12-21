@@ -26,14 +26,13 @@ const AdjustThresholds = () => {
     useState(0); // Set default value
   const [ultrasonicWaterLevelLowerLimit, setUltrasonicWaterLevelLowerLimit] =
     useState(0);
-  const [waterTemperatureLevelUpperLimit, setWaterTemperatureLevelUpperLimit] =
-    useState(0);
-  const [waterTemperatureLevelLowerLimit, setWaterTemperatureLevelLowerLimit] =
-    useState(0);
+  const [ds18b20UpperLimit, setDs18b20UpperLimit] = useState(0);
+  const [ds18b20LowerLimit, setDs18b20LowerLimit] = useState(0);
 
   // State variables for holding values for terrestrial sensors
-  const [ultrasonicPlantLevelLimit, setUltrasonicPlantLevelLimit] = useState(0);
-  const [ultrasonicPlantSystemHeight, setUltrasonicPlantSystemHeight] =
+  const [ultrasonicPlantLevelLowerLimit, setUltrasonicPlantLevelLowerLimit] =
+    useState(0);
+  const [ultrasonicPlantLevelUpperLimit, setUltrasonicPlantLevelUpperLimit] =
     useState(0);
   const [dht22TemperatureLevelUpperLimit, setDht22TemperatureLevelUpperLimit] =
     useState(0);
@@ -70,14 +69,16 @@ const AdjustThresholds = () => {
         setUltrasonicWaterLevelLowerLimit(
           thresholds.ultrasonicWaterLevelLowerLimit
         );
-        setWaterTemperatureLevelUpperLimit(
-          thresholds.waterTemperatureLevelUpperLimit
+        setDs18b20UpperLimit(thresholds.ds18b20UpperLimit);
+        setDs18b20LowerLimit(thresholds.ds18b20LowerLimit);
+        setUltrasonicPlantLevelUpperLimit(
+          thresholds.ultrasonicPlantLevelUpperLimit
         );
-        setWaterTemperatureLevelLowerLimit(
-          thresholds.waterTemperatureLevelLowerLimit
+        setUltrasonicWaterLevelLowerLimit(
+          thresholds.ultrasonicPlantLevelLowerLimit
         );
-        setUltrasonicPlantLevelLimit(thresholds.ultrasonicPlantLevelLimit);
-        setUltrasonicPlantSystemHeight(thresholds.ultrasonicPlantSystemHeight);
+        //setUltrasonicPlantLevelLimit(thresholds.ultrasonicPlantLevelLimit);
+        //setUltrasonicPlantSystemHeight(thresholds.ultrasonicPlantSystemHeight);
         setDht22TemperatureLevelUpperLimit(
           thresholds.dht22TemperatureLevelUpperLimit
         );
@@ -152,20 +153,20 @@ const AdjustThresholds = () => {
     setUltrasonicWaterLevelLowerLimit(event.target.value);
   };
 
-  const handleChangeWaterTemperatureUpperLimit = (event) => {
-    setWaterTemperatureLevelUpperLimit(event.target.value);
+  const handleChangeDs18b20UpperLimit = (event) => {
+    setDs18b20UpperLimit(event.target.value);
   };
 
-  const handleChangeWaterTemperatureLowerLimit = (event) => {
-    setWaterTemperatureLevelLowerLimit(event.target.value);
+  const handleChangeDs18b20LowerLimit = (event) => {
+    setDs18b20LowerLimit(event.target.value);
   };
 
-  const handleChangeUltrasonicPlantLevelLimit = (event) => {
-    setUltrasonicPlantLevelLimit(event.target.value);
+  const handleChangeUltrasonicPlantLowerLimit = (event) => {
+    setUltrasonicPlantLevelLowerLimit(event.target.value);
   };
 
-  const handleChangeUltrasonicPlantSystemHeight = (event) => {
-    setUltrasonicPlantSystemHeight(event.target.value);
+  const handleChangeUltrasonicPlantUpperLimit = (event) => {
+    setUltrasonicPlantLevelUpperLimit(event.target.value);
   };
 
   const handleChangeDht22TemperatureUpperLimit = (event) => {
@@ -228,7 +229,7 @@ const AdjustThresholds = () => {
     }
 
     // Validation: Check if the water temperature upper limit is greater than or equal to the lower limit
-    if (waterTemperatureLevelUpperLimit < waterTemperatureLevelLowerLimit) {
+    if (ds18b20UpperLimit < ds18b20LowerLimit) {
       validation = false;
       toast.error(
         "Water Temperature Upper Limit should be greater than or equal to the lower limit.",
@@ -285,10 +286,10 @@ const AdjustThresholds = () => {
     }
 
     // Validation: Check if the ultrasonic plant level limit is greater than or equal to the system height
-    if (ultrasonicPlantSystemHeight < ultrasonicPlantLevelLimit) {
+    if (ultrasonicPlantLevelUpperLimit < ultrasonicPlantLevelLowerLimit) {
       validation = false;
       toast.error(
-        "Ultrasonic Plant System Height should be greater than or equal to Ultrasonic Plant Level Limit.",
+        "Ultrasonic Plant Level Upper Limit should be greater than or equal to Ultrasonic Plant Lower Limit.",
         {
           position: "top-center",
           autoClose: 1500,
@@ -318,12 +319,12 @@ const AdjustThresholds = () => {
             phLevelLowerLimit: phLevelLowerLimit,
             tdsLevelUpperLimit: tdsLevelUpperLimit,
             tdsLevelLowerLimit: tdsLevelLowerLimit,
-            waterTemperatureLevelUpperLimit: waterTemperatureLevelUpperLimit,
-            waterTemperatureLevelLowerLimit: waterTemperatureLevelLowerLimit,
+            ds18b20UpperLimit: ds18b20UpperLimit,
+            ds18b20LowerLimit: ds18b20LowerLimit,
             ultrasonicWaterLevelUpperLimit: ultrasonicWaterLevelUpperLimit,
             ultrasonicWaterLevelLowerLimit: ultrasonicWaterLevelLowerLimit,
-            ultrasonicPlantLevelLimit: ultrasonicPlantLevelLimit,
-            ultrasonicPlantSystemHeight: ultrasonicPlantSystemHeight,
+            ultrasonicPlantLevelUpperLimit: ultrasonicPlantLevelUpperLimit,
+            ultrasonicPlantLevelLowerLimit: ultrasonicPlantLevelLowerLimit,
             dht22TemperatureLevelUpperLimit: dht22TemperatureLevelUpperLimit,
             dht22TemperatureLevelLowerLimit: dht22TemperatureLevelLowerLimit,
             dht22HumidityLevelUpperLimit: dht22HumidityLevelUpperLimit,
@@ -544,9 +545,9 @@ const AdjustThresholds = () => {
                 <Select
                   labelId="waterTemperatureLevelUpperLimit-label"
                   id="waterTemperatureLevelUpperLimit"
-                  value={waterTemperatureLevelUpperLimit}
+                  value={ds18b20UpperLimit}
                   label="Water Temperature Upper Limit (°C)"
-                  onChange={handleChangeWaterTemperatureUpperLimit}
+                  onChange={handleChangeDs18b20UpperLimit}
                 >
                   {dropdownOptions.waterTemperatureLevel.map((option) => (
                     <MenuItem key={option} value={option}>
@@ -565,9 +566,9 @@ const AdjustThresholds = () => {
                 <Select
                   labelId="waterTemperatureLevelLowerLimit-label"
                   id="waterTemperatureLevelLowerLimit"
-                  value={waterTemperatureLevelLowerLimit}
+                  value={ds18b20LowerLimit}
                   label="Water Temperature Lower Limit (°C)"
-                  onChange={handleChangeWaterTemperatureLowerLimit}
+                  onChange={handleChangeDs18b20LowerLimit}
                 >
                   {dropdownOptions.waterTemperatureLevel.map((option) => (
                     <MenuItem key={option} value={option}>
@@ -645,7 +646,7 @@ const AdjustThresholds = () => {
                 size="medium"
               >
                 <InputLabel id="dht22HumidityLevelUpperLimit-label">
-                  DHT22 Humidity Upper Limit (g/m3)
+                  DHT22 Humidity Upper Limit (%)
                 </InputLabel>
                 <Select
                   labelId="dht22HumidityLevelUpperLimit-label"
@@ -666,7 +667,7 @@ const AdjustThresholds = () => {
                 size="medium"
               >
                 <InputLabel id="dht22HumidityLevelLowerLimit-label">
-                  DHT22 Humidity Lower Limit (g/m3)
+                  DHT22 Humidity Lower Limit (%)
                 </InputLabel>
                 <Select
                   labelId="dht22HumidityLevelLowerLimit-label"
@@ -695,11 +696,11 @@ const AdjustThresholds = () => {
                   inputProps={{
                     pattern: "[0-9]*", // Allow only decimal digits
                   }}
-                  labelId="ultrasonicPlantLevelLimit-label"
-                  id="ultrasonicPlantLevelLimit"
-                  value={ultrasonicPlantLevelLimit}
-                  label="Ultrasonic Plant Level Limit (cm)"
-                  onChange={handleChangeUltrasonicPlantLevelLimit}
+                  labelId="ultrasonicPlantLevelLowerLimit-label"
+                  id="ultrasonicPlantLowerLimit"
+                  value={ultrasonicPlantLevelLowerLimit}
+                  label="Ultrasonic Plant Level Lower Limit (cm)"
+                  onChange={handleChangeUltrasonicPlantLowerLimit}
                 />
               </FormControl>
               <FormControl
@@ -711,11 +712,11 @@ const AdjustThresholds = () => {
                   inputProps={{
                     pattern: "[0-9]*", // Allow only decimal digits
                   }}
-                  labelId="ultrasonicPlantLevelSystemHeight-label"
-                  id="ultrasonicPlantLevelSystemHeight"
-                  value={ultrasonicPlantSystemHeight}
-                  label="Ultrasonic Plant System Height (cm)"
-                  onChange={handleChangeUltrasonicPlantSystemHeight}
+                  labelId="ultrasonicPlantLevelUpperLimit-label"
+                  id="ultrasonicPlantUpperLimit"
+                  value={ultrasonicPlantLevelUpperLimit}
+                  label="Ultrasonic Plant Level Upper Limit (cm)"
+                  onChange={handleChangeUltrasonicPlantUpperLimit}
                 />
               </FormControl>
             </Box>

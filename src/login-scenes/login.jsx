@@ -47,6 +47,7 @@ const Login = ({ setSessionIsActive }) => {
     setLoading(true);
     const adminLoginURL =
       "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/farmadmin/account/login";
+
     axios
       .post(adminLoginURL, {
         emailAddress: emailField,
@@ -57,10 +58,10 @@ const Login = ({ setSessionIsActive }) => {
           localStorage.setItem("userData", JSON.stringify(response.data));
           localStorage.setItem("emailAddress", emailField);
           localStorage.setItem("password", passwordField);
-          setSessionIsActive(true);
 
+          // Fetch aggregated system data only if login is successful
           const aggregatedSystemDataURL =
-            "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/system/administrative/data/get_aggregated_system_values";
+            "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/system/administrative/get_aggregated_system_values";
           axios
             .post(aggregatedSystemDataURL, {
               emailAddress: emailField,
@@ -89,6 +90,8 @@ const Login = ({ setSessionIsActive }) => {
                 }
               );
             });
+
+          setSessionIsActive(true);
         } else {
           toast.error("Login failed. Please try again.", {
             position: "top-center",

@@ -31,7 +31,7 @@ const AquaticSensorStatus = () => {
 
   const phData = processData("0"); // pH
   const tdsData = processData("1"); // TDS
-  const waterTemperatureData = processData("3"); // Water Temperature
+  const waterTemperatureData = processData("6"); // Water Temperature
   const ultrasonicWaterData = processData("5"); // Ultrasonic Water/ Volume
 
   return (
@@ -72,7 +72,7 @@ const AquaticSensorStatus = () => {
               data={ultrasonicWaterData}
               dataKey="value"
               timestamp="timestamp"
-              graphTitle="Water Volume (Liters)"
+              graphTitle="Water Level (cm)"
             />
           </Box>
         </Box>
