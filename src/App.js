@@ -1,9 +1,7 @@
-// hooks
+// Import necessary libraries and components
 import { useState, useEffect } from "react";
 import { ColorModeContext, useMode } from "./theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
-
-// react router
 import { Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 
@@ -40,14 +38,17 @@ const ApproveRegistrationRequests = lazy(() =>
 );
 
 export default function App() {
+  // Retrieve theme and color mode
   const [theme, colorMode] = useMode();
 
+  // Retrieve session status from sessionStorage
   const [sessionIsActive, setSessionIsActive] = useState(
-    localStorage.getItem("sessionIsActive") === true
+    sessionStorage.getItem("sessionIsActive") === "true"
   );
 
+  // Update sessionStorage when session status changes
   useEffect(() => {
-    localStorage.setItem("sessionIsActive", sessionIsActive);
+    sessionStorage.setItem("sessionIsActive", sessionIsActive);
   }, [sessionIsActive]);
 
   const dashboardRoutes = (
@@ -109,6 +110,7 @@ export default function App() {
     </div>
   );
 
+  // Render the app based on session status
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
