@@ -1,11 +1,9 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
 import { tokens } from "../../theme";
-
-// icons
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import NatureOutlinedIcon from "@mui/icons-material/NatureOutlined";
@@ -16,7 +14,6 @@ import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined
 import HelpOutlinedIcon from "@mui/icons-material/HelpOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ElectricMeterOutlinedIcon from "@mui/icons-material/ElectricMeterOutlined";
-// user-added
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import AquaFusionSideBarElement from "../../components/AquaFusionSidebarElement";
 
@@ -42,6 +39,7 @@ const Sidebar = () => {
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
 
   return (
     <Box
@@ -98,38 +96,42 @@ const Sidebar = () => {
             )}
           </MenuItem>
 
-          {/* User */}
-          <MenuItem>
-            {!isCollapsed && (
-              <Box mb="25px">
-                <Box display="flex" justifyContent="center" alignItems="center">
-                  <img
-                    alt="profile-user"
-                    width="100px"
-                    height="100px"
-                    src={`../../assets/user.jpg`}
-                    style={{ cursor: "pointer", borderRadius: "50%" }}
-                  />
-                </Box>
-                <Box textAlign="center">
-                  <Typography
-                    variant="h2"
-                    color={colors.grey[100]}
-                    fontWeight="bold"
-                    sx={{ m: "10px 0 0 0" }}
+          {userData && userData.profilePicture && userData.fullName && (
+            <MenuItem>
+              {!isCollapsed && (
+                <Box mb="25px">
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
                   >
-                    Jennie Kim
-                  </Typography>
-                  <Typography variant="h5" color={colors.greenAccent[500]}>
-                    Registered Administrator
-                  </Typography>
+                    <img
+                      alt="profile-user"
+                      width="100px"
+                      height="100px"
+                      src={userData.profilePicture}
+                      style={{ cursor: "pointer", borderRadius: "50%" }}
+                    />
+                  </Box>
+                  <Box textAlign="center">
+                    <Typography
+                      variant="h4"
+                      color={colors.grey[100]}
+                      fontWeight="bold"
+                      sx={{ m: "10px 0 0 0" }}
+                    >
+                      {userData.fullName}
+                    </Typography>
+                    <Typography variant="h5" color={colors.greenAccent[500]}>
+                      {userData.workgroupId} Admin
+                    </Typography>
+                  </Box>
                 </Box>
-              </Box>
-            )}
-          </MenuItem>
+              )}
+            </MenuItem>
+          )}
 
-          {/* Menu Items */}
-          <Box paddingLeft={isCollapsed ? undefined : "9%"}>
+          <Box paddingLeft={isCollapsed ? undefined : "2%"}>
             <Item
               title="Dashboard"
               to="/dashboard"
@@ -138,16 +140,14 @@ const Sidebar = () => {
               setSelected={setSelected}
             />
 
-            {/* Label */}
             <Typography
               variant="h6"
               color={colors.greenAccent[500]}
               fontWeight="400"
               sx={{ m: "25px auto 5px 20px" }}
             >
-              Users
+              Farm Management
             </Typography>
-            {/* End Label */}
 
             <Item
               title="Manage Workgroup"
@@ -157,7 +157,7 @@ const Sidebar = () => {
               setSelected={setSelected}
             />
             <Item
-              title="Register Farmer"
+              title="Register and Manage Farmers"
               to="/register-farmer"
               icon={<PersonOutlinedIcon />}
               selected={selected}
@@ -170,7 +170,7 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-            {/* Label */}
+
             <Typography
               variant="h6"
               color={colors.greenAccent[500]}
@@ -179,7 +179,7 @@ const Sidebar = () => {
             >
               System
             </Typography>
-            {/* End Label */}
+
             <Item
               title="System Notifications"
               to="/notifications"
@@ -216,9 +216,6 @@ const Sidebar = () => {
               setSelected={setSelected}
             />
 
-            {/*Logout of session*/}
-
-            {/* Label */}
             <Typography
               variant="h6"
               color={colors.greenAccent[500]}
@@ -227,7 +224,7 @@ const Sidebar = () => {
             >
               Session
             </Typography>
-            {/* End Label */}
+
             <Item
               title="Log Out"
               to="/logout"

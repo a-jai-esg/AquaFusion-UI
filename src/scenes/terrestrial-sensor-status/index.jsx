@@ -3,7 +3,6 @@ import { Box, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import LineChartComponent from "../../components/LineChartComponent";
-import { aquaticSensorData, dateData } from "../../data/mockLineData";
 
 const TerrestrialSensorStatus = () => {
   useEffect(() => {
@@ -12,6 +11,26 @@ const TerrestrialSensorStatus = () => {
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
+  const systemData = JSON.parse(localStorage.getItem("systemData")) || {};
+
+  // Function to process and parse data for the charts
+  const processData = (dataKey) => {
+    if (systemData[dataKey]) {
+      return systemData[dataKey].map((data) => ({
+        timestamp: data.timestamp,
+        value:
+          parseFloat(data.temperature) ||
+          parseFloat(data.humidity) ||
+          parseFloat(data.distance),
+      }));
+    }
+    return [];
+  };
+
+  const humidityData = processData("2"); // Humidity
+  const airTemperatureData = processData("6"); // Air Temperature
+  const ultrasonicTerrestrialData = processData("4"); // Ultrasonic Terrestrial
 
   return (
     <Box m="20px">
@@ -33,7 +52,9 @@ const TerrestrialSensorStatus = () => {
             borderRadius="4px"
           >
             <LineChartComponent
-              data={aquaticSensorData}
+              data={airTemperatureData}
+              dataKey="value"
+              timestamp="timestamp"
               graphTitle="Air Temperature (°C)"
             />
           </Box>
@@ -46,7 +67,9 @@ const TerrestrialSensorStatus = () => {
             borderRadius="4px"
           >
             <LineChartComponent
-              data={dateData}
+              data={humidityData}
+              dataKey="value"
+              timestamp="timestamp"
               graphTitle="Air Humidity (g/m3)"
             />
           </Box>
@@ -63,7 +86,9 @@ const TerrestrialSensorStatus = () => {
           borderRadius="4px"
         >
           <LineChartComponent
-            data={dateData}
+            data={ultrasonicTerrestrialData}
+            dataKey="value"
+            timestamp="timestamp"
             graphTitle="Plant Growth Statistics"
           />
         </Box>

@@ -31,7 +31,7 @@ const TechnicalSupport = () => {
       ></Header>
 
       <Box p="25px">
-        {/* Fails to update */}
+        {/* Connectivity Issues */}
         <Accordion
           sx={{
             "& .MuiAccordionSummary-root": {
@@ -48,12 +48,16 @@ const TechnicalSupport = () => {
               variant="h6"
               fontWeight={700}
             >
-              My Aquaponics System fails to update.
+              Aquafusion is not connecting to the network.
             </Typography>
           </AccordionSummary>
-          <AccordionDetails>Hello, World.</AccordionDetails>
+          <AccordionDetails>
+            Check your internet connection. Restart your router and the
+            Aquafusion system. Ensure the device is within the Wi-Fi range.
+          </AccordionDetails>
         </Accordion>
-        {/* Fails to update */}
+
+        {/* Sensor Inaccuracies */}
         <Accordion
           sx={{
             "& .MuiAccordionSummary-root": {
@@ -70,12 +74,17 @@ const TechnicalSupport = () => {
               variant="h6"
               fontWeight={700}
             >
-              The sensor readings are not well updated.
+              pH or temperature readings are inaccurate.
             </Typography>
           </AccordionSummary>
-          <AccordionDetails>Hello, World.</AccordionDetails>
+          <AccordionDetails>
+            Calibrate the sensors following the manual's instructions. Contact
+            support to ask for a replacement of the sensors if they are damaged
+            or have surpassed their lifespan.
+          </AccordionDetails>
         </Accordion>
-        {/* Fails to update */}
+
+        {/* Data Syncing Error */}
         <Accordion
           sx={{
             "& .MuiAccordionSummary-root": {
@@ -92,12 +101,15 @@ const TechnicalSupport = () => {
               variant="h6"
               fontWeight={700}
             >
-              The sensors' calibration seems to be off.
+              Data is not syncing with the mobile app or cloud service.
             </Typography>
           </AccordionSummary>
-          <AccordionDetails>Hello, World.</AccordionDetails>
+          <AccordionDetails>
+            Ensure your device has the latest software update. Restart the
+            device and check your app or cloud settings.
+          </AccordionDetails>
         </Accordion>
-        {/* Fails to update */}
+        {/* Alarm/Notification issues */}
         <Accordion
           sx={{
             "& .MuiAccordionSummary-root": {
@@ -114,10 +126,167 @@ const TechnicalSupport = () => {
               variant="h6"
               fontWeight={700}
             >
-              The system seems to be malfunctioning.
+              Not receiving alerts when parameters are out of range.
             </Typography>
           </AccordionSummary>
-          <AccordionDetails>Hello, World.</AccordionDetails>
+          <AccordionDetails>
+            Check notification settings in the app. Ensure your device allows
+            notifications from the Aquafusion app.
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Power Supply Issues */}
+        <Accordion
+          sx={{
+            "& .MuiAccordionSummary-root": {
+              background: `${colors.primary[400]} !important`,
+            },
+            "& .MuiAccordionDetails-root": {
+              background: `${colors.primary[400]} !important`,
+            },
+          }}
+        >
+          <AccordionSummary expandIcon={<ExpandMoreOutlinedIcon />}>
+            <Typography
+              color={colors.greenAccent[500]}
+              variant="h6"
+              fontWeight={700}
+            >
+              The device is not powering on or frequently disconnects.
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            Check the power source and cables for any damage. Ensure the device
+            is properly plugged in and receiving power.
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Water flow disruption */}
+        <Accordion
+          sx={{
+            "& .MuiAccordionSummary-root": {
+              background: `${colors.primary[400]} !important`,
+            },
+            "& .MuiAccordionDetails-root": {
+              background: `${colors.primary[400]} !important`,
+            },
+          }}
+        >
+          <AccordionSummary expandIcon={<ExpandMoreOutlinedIcon />}>
+            <Typography
+              color={colors.greenAccent[500]}
+              variant="h6"
+              fontWeight={700}
+            >
+              Inconsistent or no water flow in the system.
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            Check for blockages in pipes or pumps. Ensure the water level is
+            adequate and pumps are functioning correctly.
+          </AccordionDetails>
+        </Accordion>
+        {/* App pairing issues */}
+        <Accordion
+          sx={{
+            "& .MuiAccordionSummary-root": {
+              background: `${colors.primary[400]} !important`,
+            },
+            "& .MuiAccordionDetails-root": {
+              background: `${colors.primary[400]} !important`,
+            },
+          }}
+        >
+          <AccordionSummary expandIcon={<ExpandMoreOutlinedIcon />}>
+            <Typography
+              color={colors.greenAccent[500]}
+              variant="h6"
+              fontWeight={700}
+            >
+              Difficulty in pairing the device with the mobile app.
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            Ensure that Wi-Fi is enabled on your smartphone. Follow the app's
+            pairing instructions closely.
+          </AccordionDetails>
+        </Accordion>
+        {/* Firmware Update Failure */}
+        <Accordion
+          sx={{
+            "& .MuiAccordionSummary-root": {
+              background: `${colors.primary[400]} !important`,
+            },
+            "& .MuiAccordionDetails-root": {
+              background: `${colors.primary[400]} !important`,
+            },
+          }}
+        >
+          <AccordionSummary expandIcon={<ExpandMoreOutlinedIcon />}>
+            <Typography
+              color={colors.greenAccent[500]}
+              variant="h6"
+              fontWeight={700}
+            >
+              Unable to complete firmware updates.
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            Ensure stable internet connectivity. Try restarting the device and
+            initiating the update again. If problems persist, please contact the
+            technical team for assistance.
+          </AccordionDetails>
+        </Accordion>
+        {/* User Interface Glitches */}
+        <Accordion
+          sx={{
+            "& .MuiAccordionSummary-root": {
+              background: `${colors.primary[400]} !important`,
+            },
+            "& .MuiAccordionDetails-root": {
+              background: `${colors.primary[400]} !important`,
+            },
+          }}
+        >
+          <AccordionSummary expandIcon={<ExpandMoreOutlinedIcon />}>
+            <Typography
+              color={colors.greenAccent[500]}
+              variant="h6"
+              fontWeight={700}
+            >
+              The display or app interface is unresponsive or glitchy.
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            Restart the device. If using an app, clear the app cache or
+            reinstall the app.
+          </AccordionDetails>
+        </Accordion>
+        {/* Environmental Setting Errors */}
+        <Accordion
+          sx={{
+            "& .MuiAccordionSummary-root": {
+              background: `${colors.primary[400]} !important`,
+            },
+            "& .MuiAccordionDetails-root": {
+              background: `${colors.primary[400]} !important`,
+            },
+          }}
+        >
+          <AccordionSummary expandIcon={<ExpandMoreOutlinedIcon />}>
+            <Typography
+              color={colors.greenAccent[500]}
+              variant="h6"
+              fontWeight={700}
+            >
+              Incorrect settings for plant or fish growth.
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            Consult the Aquafusion manual for optimal environmental settings.
+            Adjust the settings according to the specific needs of your plants
+            and fish.
+          </AccordionDetails>
         </Accordion>
       </Box>
       <Box mt="25px" ml="25px">

@@ -3,7 +3,6 @@ import { Box, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import LineChartComponent from "../../components/LineChartComponent";
-import { aquaticSensorData, dateData } from "../../data/mockLineData";
 
 const AquaticSensorStatus = () => {
   useEffect(() => {
@@ -12,6 +11,28 @@ const AquaticSensorStatus = () => {
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
+  const systemData = JSON.parse(localStorage.getItem("systemData")) || {};
+
+  // Function to process and parse data for the charts
+  const processData = (dataKey) => {
+    if (systemData[dataKey]) {
+      return systemData[dataKey].map((data) => ({
+        timestamp: data.timestamp,
+        value:
+          parseFloat(data.ph_level) ||
+          parseFloat(data.temperature) ||
+          parseFloat(data.ppm) ||
+          parseFloat(data.distance),
+      }));
+    }
+    return [];
+  };
+
+  const phData = processData("0"); // pH
+  const tdsData = processData("1"); // TDS
+  const waterTemperatureData = processData("3"); // Water Temperature
+  const ultrasonicWaterData = processData("5"); // Ultrasonic Water/ Volume
 
   return (
     <Box m="20px">
@@ -33,7 +54,9 @@ const AquaticSensorStatus = () => {
             borderRadius="4px"
           >
             <LineChartComponent
-              data={aquaticSensorData}
+              data={waterTemperatureData}
+              dataKey="value"
+              timestamp="timestamp"
               graphTitle="Water Temperature (°C)"
             />
           </Box>
@@ -46,7 +69,9 @@ const AquaticSensorStatus = () => {
             borderRadius="4px"
           >
             <LineChartComponent
-              data={dateData}
+              data={ultrasonicWaterData}
+              dataKey="value"
+              timestamp="timestamp"
               graphTitle="Water Volume (Liters)"
             />
           </Box>
@@ -62,7 +87,12 @@ const AquaticSensorStatus = () => {
           mr="10px"
           borderRadius="4px"
         >
-          <LineChartComponent data={dateData} graphTitle="pH Level" />
+          <LineChartComponent
+            data={phData}
+            dataKey="value"
+            timestamp="timestamp"
+            graphTitle="pH Level"
+          />
         </Box>
         <Box
           flex="1 1 20%"
@@ -73,7 +103,9 @@ const AquaticSensorStatus = () => {
           borderRadius="4px"
         >
           <LineChartComponent
-            data={aquaticSensorData}
+            data={tdsData}
+            dataKey="value"
+            timestamp="timestamp"
             graphTitle="Total Dissolved Solids (ppm)"
           />
         </Box>

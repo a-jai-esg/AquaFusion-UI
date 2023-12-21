@@ -1,39 +1,110 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, TextField, Button, useTheme, Typography } from "@mui/material";
+import {
+  Box,
+  TextField,
+  Button,
+  useTheme,
+  CircularProgress,
+} from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { tokens } from "../../theme";
+import axios from "axios";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const initialValues = {
-  completeName: "",
+  fullName: "",
   emailAddress: "",
   password: "",
   confirmPassword: "",
 };
 
 const userSchema = yup.object().shape({
-  completeName: yup.string().required("Required."),
-  emailAddress: yup.string().email("Invalid Email").required("Required."),
-  password: yup.string().required("Required."),
-  confirmPassword: yup.string().required("Required."),
+  fullName: yup.string().required("Required."),
+  emailAddress: yup.string().email("Invalid Email.").required("Required."),
+  password: yup
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+  confirmPassword: yup.string().oneOf([yup.ref("password"), null]),
 });
 
 const Registration = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const isNonMobile = useMediaQuery("(min-width: 600px)");
-  const handleFormSubmit = (values) => {
-    console.log(values);
-  };
-
   let navigate = useNavigate();
 
+  const isNonMobile = useMediaQuery("(min-width: 600px)");
+  const [loading, setLoading] = useState(false);
+  const [formValues, setFormValues] = useState(initialValues);
+
+  const userData = JSON.parse(localStorage.getItem("userData"));
+
   const routeChange = () => {
-    navigate("/register-farmer/requests");
+    let path = "/register-farmer/requests";
+    navigate(path);
+  };
+
+  const handleFormSubmit = (values, { resetForm }) => {
+    setLoading(true);
+    const farmerRegistrationURL =
+      "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/farmer/account/register";
+
+    if (values.password !== values.confirmPassword) {
+      setLoading(false);
+      toast.error("Passwords do not match. Please try again.", {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: "colored",
+      });
+    } else {
+      console.log(values);
+      axios
+        .post(farmerRegistrationURL, {
+          fullName: values.fullName,
+          emailAddress: values.emailAddress,
+          password: values.password,
+          workgroupId: userData.workgroupId,
+          verified: true,
+        })
+        .then((response) => {
+          setLoading(false);
+          toast.success(`${response.data.message}`, {
+            position: "top-center",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: undefined,
+            theme: "colored",
+          });
+          resetForm();
+        })
+        .catch((error) => {
+          setLoading(false);
+          toast.error(`${error.response.data.message}`, {
+            position: "top-center",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: undefined,
+            theme: "colored",
+          });
+        });
+    }
   };
 
   useEffect(() => {
@@ -42,21 +113,30 @@ const Registration = () => {
 
   return (
     <Box m="20px">
+      <ToastContainer />
       <Header
         title="Register Farmer"
-        subtitle="Register a farmer to your workgroup."
+        subtitle="Register a Farmer to your managed workgroup."
       />
-      <Box marginTop="75px" p="30px" backgroundColor={colors.primary[400]}>
-        <Typography
-          variant="h5"
-          color={colors.greenAccent[500]}
-          sx={{ pb: "10px", pt: "10px" }}
+      <label htmlFor="registration-requests">
+        <Button
+          component="span"
+          variant="contained"
+          color="secondary"
+          onClick={routeChange}
+          sx={{
+            gridColumn: "span 5",
+            height: 50,
+            width: 300,
+          }}
         >
-          Register a farmer directly to the workgroup.
-        </Typography>
+          Approve Farmer Registration Requests
+        </Button>
+      </label>
+      <Box marginTop="75px" p="30px" backgroundColor={colors.primary[400]}>
         <Formik
           onSubmit={handleFormSubmit}
-          initialValues={initialValues}
+          initialValues={formValues}
           validationSchema={userSchema}
         >
           {({
@@ -81,14 +161,14 @@ const Registration = () => {
                   variant="filled"
                   type="text"
                   label="Complete Name"
-                  onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.completeName}
-                  name="completeName"
-                  error={!!touched.completeName && !!errors.completeName}
-                  helperText={touched.completeName && errors.completeName}
+                  onBlur={handleBlur}
+                  value={values.fullName}
+                  name="fullName"
+                  error={!!touched.fullName && !!errors.fullName}
+                  helperText={touched.fullName && errors.fullName}
                   sx={{
-                    gridColumn: "span 2",
+                    gridColumn: "span 4",
                   }}
                 ></TextField>
                 <TextField
@@ -96,23 +176,23 @@ const Registration = () => {
                   variant="filled"
                   type="text"
                   label="Email Address"
-                  onBlur={handleBlur}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   value={values.emailAddress}
                   name="emailAddress"
                   error={!!touched.emailAddress && !!errors.emailAddress}
                   helperText={touched.emailAddress && errors.emailAddress}
                   sx={{
-                    gridColumn: "span 2",
+                    gridColumn: "span 4",
                   }}
                 ></TextField>
                 <TextField
                   fullWidth
                   variant="filled"
-                  type="text"
+                  type="password"
                   label="Password"
-                  onBlur={handleBlur}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   value={values.password}
                   name="password"
                   error={!!touched.password && !!errors.password}
@@ -124,10 +204,10 @@ const Registration = () => {
                 <TextField
                   fullWidth
                   variant="filled"
-                  type="text"
+                  type="password"
                   label="Confirm Password"
-                  onBlur={handleBlur}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   value={values.confirmPassword}
                   name="confirmPassword"
                   error={!!touched.confirmPassword && !!errors.confirmPassword}
@@ -136,6 +216,18 @@ const Registration = () => {
                     gridColumn: "span 4",
                   }}
                 ></TextField>
+                <input
+                  id="profilePicture"
+                  name="profilePicture"
+                  type="file"
+                  onChange={(event) => {
+                    setFormValues({
+                      ...formValues,
+                      profilePicture: event.currentTarget.files[0],
+                    });
+                  }}
+                  style={{ display: "none" }}
+                />
               </Box>
               <Box
                 display="flex"
@@ -153,31 +245,32 @@ const Registration = () => {
                   type="submit"
                   color="secondary"
                   variant="contained"
+                  disabled={loading}
                   sx={{
                     gridColumn: "span 4",
                     height: 75,
                     width: 512,
                   }}
                 >
-                  Register!
+                  {loading ? (
+                    <CircularProgress
+                      size={24}
+                      sx={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        mt: "-12px",
+                        ml: "-12px",
+                      }}
+                    />
+                  ) : (
+                    "Register!"
+                  )}
                 </Button>
               </Box>
             </form>
           )}
         </Formik>
-      </Box>
-      <Box mt="25px" ml="25px">
-        <Button
-          variant="filled"
-          color={colors.grey[100]}
-          sx={{
-            borderColor: "inherit",
-            color: "#ffffff",
-          }}
-          onClick={routeChange}
-        >
-          Approve Pending Farmer Registration
-        </Button>
       </Box>
     </Box>
   );

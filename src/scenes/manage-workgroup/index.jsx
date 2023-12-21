@@ -1,5 +1,13 @@
-import { useEffect } from "react";
-import { Box, useTheme, Button } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import {
+  Box,
+  useTheme,
+  Button,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { tokens } from "../../theme";
 import {
   DataGrid,
@@ -7,36 +15,82 @@ import {
   GridToolbarColumnsButton,
   GridToolbarExport,
 } from "@mui/x-data-grid";
-import { mockDataTeam } from "../../data/mockData";
 import Header from "../../components/Header";
 
 const ManageWorkgroup = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const userData = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
-    document.title = "Manage Workgroup";
+    document.title = "Manage Farmers";
+    fetchData(); // fetch data
   }, []);
 
-  const customToolBar = () => {
-    return (
-      <GridToolbarContainer>
-        <GridToolbarColumnsButton />
-        <GridToolbarExport />
-      </GridToolbarContainer>
-    );
+  // get all verified farmers in a workgroup endpoint
+  const fetchVerifiedFarmersURL =
+    "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/farmadmin/administrative/get_verified_farmers_by_workgroup";
+
+  // this method will handle the fetching of data
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(fetchVerifiedFarmersURL, {
+        emailAddress: localStorage.getItem("emailAddress"),
+        password: localStorage.getItem("password"),
+      });
+      if (response.data === null) {
+        throw null;
+      }
+      setData(response.data);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  // this method will handle the deletion of the farmer's account
+  const handleDelete = async (farmerEmailAddress) => {
+    setLoading(true); // Set loading state to true to show the animation
+    try {
+      const workgroupId = userData.workgroupId;
+
+      const farmerDeletionURL = `https://us-central1-aquafusion-b8744.cloudfunctions.net/api/farmadmin/administrative/delete_farmer_account`;
+      await axios.post(farmerDeletionURL, {
+        emailAddress: localStorage.getItem("emailAddress"),
+        password: localStorage.getItem("password"),
+        workgroupId: workgroupId,
+        farmerEmailAddress: farmerEmailAddress,
+      });
+      fetchData(); // Refresh data after delete
+    } catch (error) {
+      console.error("Error deleting data: ", error);
+    } finally {
+      setLoading(false); // Set loading state to false after the operation
+    }
+  };
+
+  const customToolBar = () => (
+    <GridToolbarContainer>
+      <GridToolbarColumnsButton />
+      <GridToolbarExport />
+    </GridToolbarContainer>
+  );
 
   const columns = [
     {
-      field: "id",
+      field: "accountId",
       flex: 2,
       maxWidth: 300,
-      headerName: "Member ID",
+      headerName: "Account ID",
       fontWeight: "bold",
     },
     {
-      field: "name",
+      field: "fullName",
       flex: 2,
       maxWidth: 400,
       headerName: "Name",
@@ -44,7 +98,7 @@ const ManageWorkgroup = () => {
       cellClassName: "name-column--cell",
     },
     {
-      field: "email",
+      field: "emailAddress",
       flex: 2,
       maxWidth: 500,
       headerName: "Email Address",
@@ -58,11 +112,11 @@ const ManageWorkgroup = () => {
       headerName: "Delete Farmer",
       renderCell: (params) => (
         <Button
-          onClick={() => handleDelete(params.id)}
+          onClick={() => handleDelete(params.row.emailAddress)}
           variant="contained"
           color="secondary"
         >
-          Delete
+          Delete Account
         </Button>
       ),
     },
@@ -73,7 +127,7 @@ const ManageWorkgroup = () => {
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header
           title="Manage Workgroup"
-          subtitle="Set and view team privileges"
+          subtitle={`Workgroup management options for ${userData.workgroupId}`}
         />
       </Box>
       <Box pt="20px" display="flex" justifyContent="space-between">
@@ -114,12 +168,27 @@ const ManageWorkgroup = () => {
             },
           }}
         >
-          <DataGrid
-            editMode="row"
-            rows={mockDataTeam}
-            columns={columns}
-            components={{ Toolbar: customToolBar }}
-          ></DataGrid>
+          {loading ? (
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              height="100%"
+            >
+              <CircularProgress sx={{ color: colors.primary[200] }} />
+              <Typography variant="h6" sx={{ ml: 2 }}>
+                Getting a list of Farmers for {userData.workgroupId}...
+              </Typography>
+            </Box>
+          ) : (
+            <DataGrid
+              editMode="row"
+              rows={data}
+              columns={columns}
+              components={{ Toolbar: customToolBar }}
+              getRowId={(row) => row.accountId}
+            />
+          )}
         </Box>
       </Box>
     </Box>

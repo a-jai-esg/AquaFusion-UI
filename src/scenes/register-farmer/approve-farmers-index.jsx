@@ -1,7 +1,13 @@
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, useTheme } from "@mui/material";
-import CheckBoxOutlined from "@mui/icons-material/CheckBoxOutlined";
+import {
+  Box,
+  Button,
+  useTheme,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
 import { tokens } from "../../theme";
 import {
   DataGrid,
@@ -9,16 +15,86 @@ import {
   GridToolbarColumnsButton,
   GridToolbarExport,
 } from "@mui/x-data-grid";
-import { mockDataTeam } from "../../data/mockData";
 import Header from "../../components/Header";
 
-const ApproveRegistrationRequests = () => {
+const ApproveRegistrationRequest = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const userData = JSON.parse(localStorage.getItem("userData"));
+
+  let navigate = useNavigate();
 
   useEffect(() => {
     document.title = "Register Farmer";
+    fetchData(); // fetch data
   }, []);
+
+  // get all verified farmers in a workgroup endpoint
+  const fetchAllFarmersInWorkgroupURL =
+    "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/farmadmin/administrative/get_unverified_farmers_by_workgroup";
+
+  // this method will handle the fetching of data
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(fetchAllFarmersInWorkgroupURL, {
+        emailAddress: localStorage.getItem("emailAddress"),
+        password: localStorage.getItem("password"),
+      });
+      if (response.data === null) {
+        throw null;
+      }
+      setData(response.data);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // this method will handle the deletion of the farmer's account
+  const handleDelete = async (farmerEmailAddress) => {
+    setLoading(true); // Set loading state to true to show the animation
+    try {
+      const workgroupId = userData.workgroupId;
+
+      const farmerDeletionURL = `https://us-central1-aquafusion-b8744.cloudfunctions.net/api/farmadmin/administrative/delete_farmer_account`;
+      await axios.post(farmerDeletionURL, {
+        emailAddress: localStorage.getItem("emailAddress"),
+        password: localStorage.getItem("password"),
+        workgroupId: workgroupId,
+        farmerEmailAddress: farmerEmailAddress,
+      });
+      fetchData(); // Refresh data after delete
+    } catch (error) {
+      console.error("Error deleting data: ", error);
+    } finally {
+      setLoading(false); // Set loading state to false after the operation
+    }
+  };
+
+  // this method will handle the deletion of the farmer's account
+  const handleApprove = async (farmerEmailAddress) => {
+    setLoading(true); // Set loading state to true to show the animation
+    try {
+      const workgroupId = userData.workgroupId;
+
+      const farmerApprovalURL = `https://us-central1-aquafusion-b8744.cloudfunctions.net/api/farmadmin/administrative/approve_farmer_account`;
+      await axios.post(farmerApprovalURL, {
+        emailAddress: localStorage.getItem("emailAddress"),
+        password: localStorage.getItem("password"),
+        farmerEmailAddress: farmerEmailAddress,
+      });
+      fetchData(); // Refresh data after delete
+    } catch (error) {
+      console.error("Error deleting data: ", error);
+    } finally {
+      setLoading(false); // Set loading state to false after the operation
+    }
+  };
 
   const customToolBar = () => {
     return (
@@ -29,27 +105,27 @@ const ApproveRegistrationRequests = () => {
     );
   };
 
-  let navigate = useNavigate();
-
   const routeChange = () => {
-    navigate("/register-farmer/");
+    let path = "/register-farmer/";
+    navigate(path);
   };
 
   const columns = [
     {
-      field: "id",
-      headerName: "Member ID",
+      field: "accountId",
+      flex: 2,
+      headerName: "Account ID",
       fontWeight: "bold",
     },
     {
-      field: "name",
-      flex: 3,
+      field: "fullName",
+      flex: 2,
       headerName: "Name",
       editable: true,
       cellClassName: "name-column--cell",
     },
     {
-      field: "email",
+      field: "emailAddress",
       flex: 2,
       headerName: "Email Address",
       editable: true,
@@ -62,12 +138,28 @@ const ApproveRegistrationRequests = () => {
       width: 200,
       renderCell: (params) => (
         <Button
-          onClick={() => handleApprove(params.id)}
+          onClick={() => handleApprove(params.row.emailAddress)}
           variant="contained"
           color="secondary"
           marginLeft="50%"
         >
-          Approve Request
+          Approve to Workgroup
+        </Button>
+      ),
+    },
+    {
+      field: "Delete",
+      flex: 1,
+      headerName: "Delete Registration Request",
+      width: 200,
+      renderCell: (params) => (
+        <Button
+          onClick={() => handleDelete(params.row.emailAddress)}
+          variant="contained"
+          color="secondary"
+          marginLeft="50%"
+        >
+          Delete Request
         </Button>
       ),
     },
@@ -115,12 +207,28 @@ const ApproveRegistrationRequests = () => {
             },
           }}
         >
-          <DataGrid
-            editMode="row"
-            rows={mockDataTeam}
-            columns={columns}
-            components={{ Toolbar: customToolBar }}
-          ></DataGrid>
+          {loading ? (
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              height="100%"
+            >
+              <CircularProgress sx={{ color: colors.primary[200] }} />
+              <Typography variant="h6" sx={{ ml: 2 }}>
+                Getting a list of unverified farmers for {userData.workgroupId}
+                ...
+              </Typography>
+            </Box>
+          ) : (
+            <DataGrid
+              editMode="row"
+              rows={data}
+              columns={columns}
+              components={{ Toolbar: customToolBar }}
+              getRowId={(row) => row.accountId}
+            />
+          )}
         </Box>
       </Box>
       <Box mt="15px" ml="10px">
@@ -140,4 +248,4 @@ const ApproveRegistrationRequests = () => {
   );
 };
 
-export default ApproveRegistrationRequests;
+export default ApproveRegistrationRequest;

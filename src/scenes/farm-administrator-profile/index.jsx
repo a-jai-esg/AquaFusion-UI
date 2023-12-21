@@ -17,6 +17,7 @@ const Profile = ({ userName, accountID, emailAddress, workgroupName }) => {
 
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
+  const userData = JSON.parse(localStorage.getItem("userData"));
 
   // for password modals
   const handleOpenPasswordModal = () => {
@@ -27,10 +28,6 @@ const Profile = ({ userName, accountID, emailAddress, workgroupName }) => {
     setIsPasswordModalOpen(false);
   };
 
-  const handleChangePassword = (newPassword) => {
-    alert("Changing password to:", newPassword);
-  };
-
   // for edit profile modals
   const handleOpenEditModal = () => {
     setIsEditProfileModalOpen(true);
@@ -38,10 +35,6 @@ const Profile = ({ userName, accountID, emailAddress, workgroupName }) => {
 
   const handleCloseEditModal = () => {
     setIsEditProfileModalOpen(false);
-  };
-
-  const handleEditProfile = (newProfileName, newProfilePicture) => {
-    alert("Succesfully edited your profile!");
   };
 
   return (
@@ -69,7 +62,7 @@ const Profile = ({ userName, accountID, emailAddress, workgroupName }) => {
               alt="profile-user"
               width="100px"
               height="100px"
-              src={`../../assets/user.jpg`}
+              src={userData.profilePicture}
               style={{ cursor: "pointer", borderRadius: "50%" }}
             />
           </Box>
@@ -82,7 +75,7 @@ const Profile = ({ userName, accountID, emailAddress, workgroupName }) => {
               fontWeight="bold"
               sx={{ m: "10px 0 0 0" }}
             >
-              {userName}
+              {userData.fullName}
             </Typography>
             <Typography variant="h5" color={colors.greenAccent[500]}>
               Registered Administrator
@@ -97,10 +90,10 @@ const Profile = ({ userName, accountID, emailAddress, workgroupName }) => {
               fontWeight="600"
               sx={{ m: "15px 0 0 0" }}
             >
-              WORKGROUP
+              WORKGROUP ID
             </Typography>
             <Typography variant="h5" fontWeight="300" color={colors.grey[100]}>
-              {workgroupName}
+              {userData.workgroupId}
             </Typography>
           </Box>
 
@@ -115,7 +108,7 @@ const Profile = ({ userName, accountID, emailAddress, workgroupName }) => {
               ACCOUNT ID
             </Typography>
             <Typography variant="h5" fontWeight="300" color={colors.grey[100]}>
-              {accountID}
+              {userData.accountId}
             </Typography>
           </Box>
 
@@ -130,7 +123,7 @@ const Profile = ({ userName, accountID, emailAddress, workgroupName }) => {
               EMAIL ADDRESS
             </Typography>
             <Typography variant="h5" fontWeight="300" color={colors.grey[100]}>
-              {emailAddress}
+              {userData.emailAddress}
             </Typography>
           </Box>
           <Box mt="50px" textAlign="center">
@@ -147,7 +140,6 @@ const Profile = ({ userName, accountID, emailAddress, workgroupName }) => {
             <EditProfileModal
               isOpen={isEditProfileModalOpen}
               onRequestClose={handleCloseEditModal}
-              onEditProfile={handleEditProfile}
             />
           </Box>
           <Box mt="5px" textAlign="center">
@@ -165,7 +157,6 @@ const Profile = ({ userName, accountID, emailAddress, workgroupName }) => {
             <ChangePasswordModal
               isOpen={isPasswordModalOpen}
               onRequestClose={handleClosePasswordModal}
-              onChangePassword={handleChangePassword}
             />
           </Box>
         </Box>

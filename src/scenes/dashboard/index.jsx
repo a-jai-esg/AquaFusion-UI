@@ -1,14 +1,10 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Box, useTheme } from "@mui/material";
-import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import LineChartComponent from "../../components/LineChartComponent";
-import {
-  aquaticSensorData,
-  dateData,
-  notificationDataToday,
-} from "../../data/mockLineData";
 import NotificationTable from "../../components/NotificationTable";
+import { notificationDataToday } from "../../data/mockLineData";
+import { tokens } from "../../theme";
 
 const Dashboard = () => {
   useEffect(() => {
@@ -18,22 +14,46 @@ const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
+  const userData = JSON.parse(localStorage.getItem("userData")) || {};
+  const systemData = JSON.parse(localStorage.getItem("systemData")) || {};
+
+  // Function to process and parse data for the charts
+  const processData = (dataKey) => {
+    if (systemData[dataKey]) {
+      return systemData[dataKey].map((data) => ({
+        timestamp: data.timestamp,
+        value:
+          parseFloat(data.humidity) ||
+          parseFloat(data.temperature) ||
+          parseFloat(data.waterTemperature),
+      }));
+    }
+    return [];
+  };
+
+  const waterTemperatureData = processData("3"); // Water Temperature
+  const airTemperatureData = processData("6"); // Air Temperature
+  const humidityData = processData("2"); // Humidity
+
+  const helloMessage = `Howdy, Admin ${userData.fullName || ""}!`;
   return (
     <Box m="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="Dashboard" subtitle="Today's Activity" />
+        <Header title="Dashboard" subtitle={helloMessage} />
       </Box>
       <Box>
         <Box pt="10px" display="flex" justifyContent="space-between">
-          {/* Line Graph */}
+          {/* Water Temperature Graph */}
           <Box
-            flex="1 1 20%"
+            flex="1 1 30%"
             backgroundColor={colors.primary[400]}
             p="15px"
             borderRadius="4px"
           >
             <LineChartComponent
-              data={aquaticSensorData}
+              data={waterTemperatureData}
+              dataKey="value" // Make sure this matches the key in your data
+              timestamp="timestamp" // Make sure this matches the key in your data
               graphTitle="Water Temperature"
             />
           </Box>
@@ -47,35 +67,16 @@ const Dashboard = () => {
             ml="15px"
             h="100vh"
             sx={{
-              "& .MuiDataGrid-root": {
-                border: "none",
-              },
-              "& .MuiDataGrid-cell": {
-                borderBottom: "none",
-              },
-              "& .name-column--cell": {
-                color: colors.greenAccent[300],
-              },
+              "& .MuiDataGrid-root": { border: "none" },
+              "& .MuiDataGrid-cell": { borderBottom: "none" },
+              "& .name-column--cell": { color: colors.greenAccent[300] },
               "& .MuiDataGrid-columnHeaders": {
                 backgroundColor: colors.blueAccent[700],
                 borderBottom: "none",
               },
-              "& .MuiDataGrid-virtualScroller": {
-                backgroundColor: colors.primary[400],
-              },
-              "& .MuiDataGrid-footerContainer": {
-                borderTop: "none",
-                backgroundColor: colors.blueAccent[700],
-              },
-              "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-                borderTop: "none",
-                backgroundColor: colors.blueAccent[700],
-              },
-              "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-                color: `${colors.grey[100]}`,
-              },
             }}
           >
+            {/* Use NotificationTable component here */}
             <NotificationTable
               notificationData={notificationDataToday}
               isDefault={false}
@@ -83,7 +84,7 @@ const Dashboard = () => {
           </Box>
         </Box>
         <Box pt="20px" display="flex" justifyContent="space-between">
-          {/* Line Graph */}
+          {/* Air Temperature Graph */}
           <Box
             flex="1 1 50%"
             backgroundColor={colors.primary[400]}
@@ -92,8 +93,14 @@ const Dashboard = () => {
             mr="auto"
             borderRadius="4px"
           >
-            <LineChartComponent data={dateData} graphTitle="Air Temperature" />
+            <LineChartComponent
+              data={airTemperatureData}
+              dataKey="value" // Make sure this matches the key in your data
+              timestamp="timestamp" // Make sure this matches the key in your data
+              graphTitle="Air Temperature"
+            />
           </Box>
+          {/* Humidity Graph */}
           <Box
             flex="1 1 50%"
             backgroundColor={colors.primary[400]}
@@ -103,7 +110,9 @@ const Dashboard = () => {
             borderRadius="4px"
           >
             <LineChartComponent
-              data={aquaticSensorData}
+              data={humidityData}
+              dataKey="value" // Make sure this matches the key in your data
+              timestamp="timestamp" // Make sure this matches the key in your data
               graphTitle="Air Humidity"
             />
           </Box>

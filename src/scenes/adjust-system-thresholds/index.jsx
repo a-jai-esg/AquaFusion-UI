@@ -1,63 +1,376 @@
-import { useState, useEffect } from "react";
-import { Button, Typography, Box, useTheme } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import {
+  Button,
+  Typography,
+  Box,
+  useTheme,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+  TextField,
+} from "@mui/material";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AdjustThresholds = () => {
+  // State variables for holding values for aquatic sensors
+  const [phLevelUpperLimit, setPhLevelUpperLimit] = useState(0);
+  const [phLevelLowerLimit, setPhLevelLowerLimit] = useState(0);
+  const [tdsLevelUpperLimit, setTdsLevelUpperLimit] = useState(0);
+  const [tdsLevelLowerLimit, setTdsLevelLowerLimit] = useState(0);
+  const [ultrasonicWaterLevelUpperLimit, setUltrasonicWaterLevelUpperLimit] =
+    useState(0); // Set default value
+  const [ultrasonicWaterLevelLowerLimit, setUltrasonicWaterLevelLowerLimit] =
+    useState(0);
+  const [waterTemperatureLevelUpperLimit, setWaterTemperatureLevelUpperLimit] =
+    useState(0);
+  const [waterTemperatureLevelLowerLimit, setWaterTemperatureLevelLowerLimit] =
+    useState(0);
+
+  // State variables for holding values for terrestrial sensors
+  const [ultrasonicPlantLevelLimit, setUltrasonicPlantLevelLimit] = useState(0);
+  const [ultrasonicPlantSystemHeight, setUltrasonicPlantSystemHeight] =
+    useState(0);
+  const [dht22TemperatureLevelUpperLimit, setDht22TemperatureLevelUpperLimit] =
+    useState(0);
+  const [dht22TemperatureLevelLowerLimit, setDht22TemperatureLevelLowerLimit] =
+    useState(0);
+  const [dht22HumidityLevelUpperLimit, setDht22HumidityLevelUpperLimit] =
+    useState(0);
+  const [dht22HumidityLevelLowerLimit, setDht22HumidityLevelLowerLimit] =
+    useState(0);
+
   useEffect(() => {
     document.title = "Adjust System Thresholds";
+
+    const fetchThresholds = async () => {
+      try {
+        const response = await axios.post(
+          "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/system/administrative/get_sensor_thresholds",
+          {
+            emailAddress: localStorage.getItem("emailAddress"),
+            password: localStorage.getItem("password"),
+          }
+        );
+
+        const thresholds = response.data;
+
+        // Update state variables with fetched threshold values
+        setPhLevelUpperLimit(thresholds.phLevelUpperLimit);
+        setPhLevelLowerLimit(thresholds.phLevelLowerLimit);
+        setTdsLevelUpperLimit(thresholds.tdsLevelUpperLimit);
+        setTdsLevelLowerLimit(thresholds.tdsLevelLowerLimit);
+        setUltrasonicWaterLevelUpperLimit(
+          thresholds.ultrasonicWaterLevelUpperLimit
+        );
+        setUltrasonicWaterLevelLowerLimit(
+          thresholds.ultrasonicWaterLevelLowerLimit
+        );
+        setWaterTemperatureLevelUpperLimit(
+          thresholds.waterTemperatureLevelUpperLimit
+        );
+        setWaterTemperatureLevelLowerLimit(
+          thresholds.waterTemperatureLevelLowerLimit
+        );
+        setUltrasonicPlantLevelLimit(thresholds.ultrasonicPlantLevelLimit);
+        setUltrasonicPlantSystemHeight(thresholds.ultrasonicPlantSystemHeight);
+        setDht22TemperatureLevelUpperLimit(
+          thresholds.dht22TemperatureLevelUpperLimit
+        );
+        setDht22TemperatureLevelLowerLimit(
+          thresholds.dht22TemperatureLevelLowerLimit
+        );
+        setDht22HumidityLevelUpperLimit(
+          thresholds.dht22HumidityLevelUpperLimit
+        );
+        setDht22HumidityLevelLowerLimit(
+          thresholds.dht22HumidityLevelLowerLimit
+        );
+
+        // ... (update other state variables accordingly)
+      } catch (error) {
+        toast.error("Failed to fetch threshold values.", {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
+    };
+
+    fetchThresholds();
   }, []);
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  // hooks for holding values for aquatic sensors
-  const [pHLevel, setpHLevel] = useState(6.5);
-  const [TDS, setTDSLevel] = useState(300.0);
-  const [waterTemperature, setWaterTemperature] = useState(27.0);
-  const [waterVolume, setWaterVolume] = useState(30.0);
-
-  // hooks for holding values for terrestrial sensors
-  const [airTemperature, setAirTemperature] = useState(26.0);
-  const [airHumidity, setAirHumidity] = useState(20.0);
-  const [plantHeight, setPlantHeight] = useState(20.0);
-
-  // changes aquatic sensors
-  const handleChangepH = (event) => {
-    setpHLevel(event.target.value);
+  // Options for dropdown lists
+  const dropdownOptions = {
+    phLevel: [5.5, 6.5, 7.0, 7.5, 8.0],
+    tdsLevel: [
+      100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400,
+      1500, 1600, 1700, 1800, 1900, 2000,
+    ],
+    waterTemperatureLevel: [22.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0, 29.0],
+    dht22TemperatureLevel: [
+      22.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0, 29.0, 31.0, 32.0,
+    ],
+    dht22HumidityLevel: [
+      10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0,
+    ],
   };
 
-  const handleChangeTDS = (event) => {
-    setTDSLevel(event.target.value);
+  const handleChangePhUpperLimit = (event) => {
+    setPhLevelUpperLimit(event.target.value);
   };
 
-  const handleChangeWaterTemperature = (event) => {
-    setWaterTemperature(event.target.value);
+  const handleChangePhLowerLimit = (event) => {
+    setPhLevelLowerLimit(event.target.value);
   };
 
-  const handleChangeWaterVolume = (event) => {
-    setWaterVolume(event.target.value);
+  const handleChangeTdsUpperLimit = (event) => {
+    setTdsLevelUpperLimit(event.target.value);
   };
 
-  // changes terrestrial sensors
-  const handleChangeAirTemperature = (event) => {
-    setAirTemperature(event.target.value);
+  const handleChangeTdsLowerLimit = (event) => {
+    setTdsLevelLowerLimit(event.target.value);
   };
 
-  const handleChangeAirHumidity = (event) => {
-    setAirHumidity(event.target.value);
+  const handleChangeUltrasonicWaterLevelUpperLimit = (event) => {
+    setUltrasonicWaterLevelUpperLimit(event.target.value);
   };
 
-  const handleChangePlantHeight = (event) => {
-    setPlantHeight(event.target.value);
+  const handleChangeUltrasonicWaterLevelLowerLimit = (event) => {
+    setUltrasonicWaterLevelLowerLimit(event.target.value);
+  };
+
+  const handleChangeWaterTemperatureUpperLimit = (event) => {
+    setWaterTemperatureLevelUpperLimit(event.target.value);
+  };
+
+  const handleChangeWaterTemperatureLowerLimit = (event) => {
+    setWaterTemperatureLevelLowerLimit(event.target.value);
+  };
+
+  const handleChangeUltrasonicPlantLevelLimit = (event) => {
+    setUltrasonicPlantLevelLimit(event.target.value);
+  };
+
+  const handleChangeUltrasonicPlantSystemHeight = (event) => {
+    setUltrasonicPlantSystemHeight(event.target.value);
+  };
+
+  const handleChangeDht22TemperatureUpperLimit = (event) => {
+    setDht22TemperatureLevelUpperLimit(event.target.value);
+  };
+
+  const handleChangeDht22TemperatureLowerLimit = (event) => {
+    setDht22TemperatureLevelLowerLimit(event.target.value);
+  };
+
+  const handleChangeDht22HumidityUpperLimit = (event) => {
+    setDht22HumidityLevelUpperLimit(event.target.value);
+  };
+
+  const handleChangeDht22HumidityLowerLimit = (event) => {
+    setDht22HumidityLevelLowerLimit(event.target.value);
+  };
+
+  const handleChangeParameters = () => {
+    // Validation: Check if the upper limit is greater than or equal to the lower limit
+    let validation = true;
+    if (
+      phLevelUpperLimit < phLevelLowerLimit ||
+      tdsLevelUpperLimit < tdsLevelLowerLimit
+    ) {
+      validation = false;
+      toast.error(
+        "Upper limit should be greater than or equal to lower limit for pH Level and TDS Levels.",
+        {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      return;
+    }
+
+    // Validation: Check if the ultrasonic water level upper limit is greater than the lower limit
+    if (ultrasonicWaterLevelUpperLimit < ultrasonicWaterLevelLowerLimit) {
+      validation = false;
+      toast.error(
+        "Ultrasonic Water Level Upper Limit should be greater than or equal to the lower limit.",
+        {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      return;
+    }
+
+    // Validation: Check if the water temperature upper limit is greater than or equal to the lower limit
+    if (waterTemperatureLevelUpperLimit < waterTemperatureLevelLowerLimit) {
+      validation = false;
+      toast.error(
+        "Water Temperature Upper Limit should be greater than or equal to the lower limit.",
+        {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      return;
+    }
+
+    // Validation: Check if the DHT22 temperature upper limit is greater than or equal to the lower limit
+    if (dht22TemperatureLevelUpperLimit < dht22TemperatureLevelLowerLimit) {
+      validation = false;
+      toast.error(
+        "DHT22 Temperature Upper Limit should be greater than or equal to the lower limit.",
+        {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      return;
+    }
+
+    // Validation: Check if the DHT22 humidity upper limit is greater than or equal to the lower limit
+    if (dht22HumidityLevelUpperLimit < dht22HumidityLevelLowerLimit) {
+      validation = false;
+      toast.error(
+        "DHT22 Humidity Upper Limit should be greater than or equal to the lower limit.",
+        {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      return;
+    }
+
+    // Validation: Check if the ultrasonic plant level limit is greater than or equal to the system height
+    if (ultrasonicPlantSystemHeight < ultrasonicPlantLevelLimit) {
+      validation = false;
+      toast.error(
+        "Ultrasonic Plant System Height should be greater than or equal to Ultrasonic Plant Level Limit.",
+        {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      return;
+    }
+
+    // If all validations pass, you can proceed with making changes
+    // Add logic to handle parameter changes
+
+    if (validation) {
+      try {
+        const changeSystemParameterURL =
+          "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/system/administrative/set_sensor_thresholds";
+        axios
+          .post(changeSystemParameterURL, {
+            emailAddress: localStorage.getItem("emailAddress"),
+            password: localStorage.getItem("password"),
+            phLevelUpperLimit: phLevelUpperLimit,
+            phLevelLowerLimit: phLevelLowerLimit,
+            tdsLevelUpperLimit: tdsLevelUpperLimit,
+            tdsLevelLowerLimit: tdsLevelLowerLimit,
+            waterTemperatureLevelUpperLimit: waterTemperatureLevelUpperLimit,
+            waterTemperatureLevelLowerLimit: waterTemperatureLevelLowerLimit,
+            ultrasonicWaterLevelUpperLimit: ultrasonicWaterLevelUpperLimit,
+            ultrasonicWaterLevelLowerLimit: ultrasonicWaterLevelLowerLimit,
+            ultrasonicPlantLevelLimit: ultrasonicPlantLevelLimit,
+            ultrasonicPlantSystemHeight: ultrasonicPlantSystemHeight,
+            dht22TemperatureLevelUpperLimit: dht22TemperatureLevelUpperLimit,
+            dht22TemperatureLevelLowerLimit: dht22TemperatureLevelLowerLimit,
+            dht22HumidityLevelUpperLimit: dht22HumidityLevelUpperLimit,
+            dht22HumidityLevelLowerLimit: dht22HumidityLevelLowerLimit,
+          })
+          .then((response) => {
+            toast.success(`${response.data.message}`, {
+              position: "top-center",
+              autoClose: 1500,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: false,
+              progress: undefined,
+              theme: "colored",
+            });
+          })
+          .catch((exception) => {
+            toast.error(`${exception}`, {
+              position: "top-center",
+              autoClose: 1500,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: false,
+              progress: undefined,
+              theme: "colored",
+            });
+          });
+      } catch (Exception) {
+        toast.error(`${Exception}`, {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
+    }
   };
 
   return (
     <Box m="20px">
+      <ToastContainer />
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header
           title="Adjust System Thresholds"
@@ -81,49 +394,141 @@ const AdjustThresholds = () => {
 
             {/* pH Level */}
             <Box p="20px">
+              {/*
+                Upper Limit
+              */}
               <FormControl
-                sx={{ m: 1, minWidth: 150, padding: "10px" }}
-                size="medium"
+                sx={{ m: 1, minWidth: 250, maxWidth: 300, padding: "10px" }}
+                size="large"
               >
-                <InputLabel id="demo-select-small-label">pH Level</InputLabel>
+                <InputLabel id="phLevelUpperLimit-label">
+                  pH Level Upper Limit
+                </InputLabel>
                 <Select
-                  labelId="demo-select-small-label"
-                  id="demo-select-small"
-                  value={pHLevel}
-                  label="pH Level"
-                  onChange={handleChangepH}
+                  labelId="phLevelUpperLimit-label"
+                  id="phLevelUpperLimit"
+                  value={phLevelUpperLimit}
+                  label="pH Level Upper Limit"
+                  onChange={handleChangePhUpperLimit}
                 >
-                  <MenuItem value={null}>
-                    <em>Negligible</em>
-                  </MenuItem>
-                  <MenuItem value={5.5}>5.5</MenuItem>
-                  <MenuItem value={6.5}>6.5</MenuItem>
-                  <MenuItem value={7.0}>7.0</MenuItem>
+                  {dropdownOptions.phLevel.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              {/*
+                Lower Limit
+              */}
+              <FormControl
+                sx={{ m: 1, minWidth: 250, maxWidth: 300, padding: "10px" }}
+                size="large"
+              >
+                <InputLabel id="phLevelLowerLimit-label">
+                  pH Level Lower Limit
+                </InputLabel>
+                <Select
+                  labelId="phLevelLowerLimit-label"
+                  id="phLevelLowerLimit"
+                  value={phLevelLowerLimit}
+                  label="pH Level Upper Limit"
+                  onChange={handleChangePhLowerLimit}
+                >
+                  {dropdownOptions.phLevel.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
 
             {/* TDS Levels */}
             <Box p="20px">
+              {/*
+                Upper Limit
+              */}
               <FormControl
                 sx={{ m: 1, minWidth: 250, padding: "10px" }}
                 size="medium"
               >
-                <InputLabel id="demo-select-small-label">
-                  Total Dissolved Solids
+                <InputLabel id="tdsLevelUpperLimit-label">
+                  Total Dissolved Solids Upper Limit
                 </InputLabel>
                 <Select
-                  labelId="demo-select-small-label"
-                  id="demo-select-small"
-                  value={TDS}
-                  label="Total Dissolved Solids (ppm)"
-                  onChange={handleChangeTDS}
+                  labelId="tdsLevelUpperLimit-label"
+                  id="tdsLevelUpperLimit"
+                  value={tdsLevelUpperLimit}
+                  label="Total Dissolved Solids Upper Limit"
+                  onChange={handleChangeTdsUpperLimit}
                 >
-                  <MenuItem value={100}>100</MenuItem>
-                  <MenuItem value={200}>200</MenuItem>
-                  <MenuItem value={300}>300</MenuItem>
-                  <MenuItem value={400}>400</MenuItem>
+                  {dropdownOptions.tdsLevel.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
                 </Select>
+              </FormControl>
+              {/*
+                Lower Limit
+              */}
+              <FormControl
+                sx={{ m: 1, minWidth: 250, padding: "10px" }}
+                size="medium"
+              >
+                <InputLabel id="tdsLevelLowerLimit-label">
+                  Total Dissolved Solids Lower Limit
+                </InputLabel>
+                <Select
+                  labelId="tdsLevelLowerLimit-label"
+                  id="tdsLevelLowerLimit"
+                  value={tdsLevelLowerLimit}
+                  label="Total Dissolved Solids Lower Limit"
+                  onChange={handleChangeTdsLowerLimit}
+                >
+                  {dropdownOptions.tdsLevel.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+
+            {/* Ultrasonic Water Level */}
+            <Box p="20px">
+              <FormControl
+                sx={{ m: 1, minWidth: 250, padding: "10px" }}
+                size="medium"
+              >
+                <TextField
+                  type="number"
+                  inputProps={{
+                    pattern: "[0-9]*", // Allow only decimal digits
+                  }}
+                  labelId="ultrasonicPlantLevelUpperLimit-label"
+                  id="ultrasonicPlantLevelUpperLimit"
+                  value={ultrasonicWaterLevelUpperLimit}
+                  label="Ultrasonic Water Level Upper Limit (cm)"
+                  onChange={handleChangeUltrasonicWaterLevelUpperLimit}
+                />
+              </FormControl>
+              <FormControl
+                sx={{ m: 1, minWidth: 250, padding: "10px" }}
+                size="medium"
+              >
+                <TextField
+                  type="number"
+                  inputProps={{
+                    pattern: "[0-9]*", // Allow only decimal digits
+                  }}
+                  labelId="ultrasonicWaterLevelLowerLimit-label"
+                  id="ultrasonicWaterLevelLowerLimit"
+                  value={ultrasonicWaterLevelLowerLimit}
+                  label="Ultrasonic Water Level Lower Limit"
+                  onChange={handleChangeUltrasonicWaterLevelLowerLimit}
+                />
               </FormControl>
             </Box>
 
@@ -133,52 +538,42 @@ const AdjustThresholds = () => {
                 sx={{ m: 1, minWidth: 250, padding: "10px" }}
                 size="medium"
               >
-                <InputLabel id="demo-select-small-label">
-                  Water Temperature (°C)
+                <InputLabel id="waterTemperatureLevelUpperLimit-label">
+                  Water Temperature Upper Limit (°C)
                 </InputLabel>
                 <Select
-                  labelId="demo-select-small-label"
-                  id="demo-select-small"
-                  value={waterTemperature}
-                  label="Water Temperature (°C)"
-                  onChange={handleChangeWaterTemperature}
+                  labelId="waterTemperatureLevelUpperLimit-label"
+                  id="waterTemperatureLevelUpperLimit"
+                  value={waterTemperatureLevelUpperLimit}
+                  label="Water Temperature Upper Limit (°C)"
+                  onChange={handleChangeWaterTemperatureUpperLimit}
                 >
-                  <MenuItem value={22.0}>22</MenuItem>
-                  <MenuItem value={23.0}>23</MenuItem>
-                  <MenuItem value={24.0}>24</MenuItem>
-                  <MenuItem value={25.0}>25</MenuItem>
-                  <MenuItem value={26.0}>26</MenuItem>
-                  <MenuItem value={27.0}>27</MenuItem>
-                  <MenuItem value={28.0}>28</MenuItem>
-                  <MenuItem value={29.0}>29</MenuItem>
+                  {dropdownOptions.waterTemperatureLevel.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
-            </Box>
-
-            {/* Water Volume */}
-            <Box p="20px">
               <FormControl
                 sx={{ m: 1, minWidth: 250, padding: "10px" }}
                 size="medium"
               >
-                <InputLabel id="demo-select-small-label">
-                  Water Volume (L)
+                <InputLabel id="waterTemperatureLevelUpperLimit-label">
+                  Water Temperature Lower Limit (°C)
                 </InputLabel>
                 <Select
-                  labelId="demo-select-small-label"
-                  id="demo-select-small"
-                  value={waterVolume}
-                  label="Water Volume (L)"
-                  onChange={handleChangeWaterVolume}
+                  labelId="waterTemperatureLevelLowerLimit-label"
+                  id="waterTemperatureLevelLowerLimit"
+                  value={waterTemperatureLevelLowerLimit}
+                  label="Water Temperature Lower Limit (°C)"
+                  onChange={handleChangeWaterTemperatureLowerLimit}
                 >
-                  <MenuItem value={27.0}>30</MenuItem>
-                  <MenuItem value={28.0}>40</MenuItem>
-                  <MenuItem value={29.0}>50</MenuItem>
-                  <MenuItem value={30.0}>60</MenuItem>
-                  <MenuItem value={30.0}>90</MenuItem>
-                  <MenuItem value={30.0}>100</MenuItem>
-                  <MenuItem value={30.0}>110</MenuItem>
-                  <MenuItem value={30.0}>120</MenuItem>
+                  {dropdownOptions.waterTemperatureLevel.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -197,88 +592,131 @@ const AdjustThresholds = () => {
               Terrestrial Sensors Thresholds
             </Typography>
 
-            {/* Air Temperature */}
+            {/* DHT22 Temperature */}
             <Box p="20px">
               <FormControl
                 sx={{ m: 1, minWidth: 250, padding: "10px" }}
                 size="medium"
               >
-                <InputLabel id="demo-select-small-label">
-                  Air Temperature (°C)
+                <InputLabel id="dht22TemperatureLevelUpperLimit-label">
+                  DHT22 Temperature Upper Limit (°C)
                 </InputLabel>
                 <Select
-                  labelId="demo-select-small-label"
-                  id="demo-select-small"
-                  value={airTemperature}
-                  label="Air Temperature (°C)"
-                  onChange={handleChangeAirTemperature}
+                  labelId="dht22TemperatureLevelUpperLimit-label"
+                  id="dht22TemperatureLevelUpperLimit"
+                  value={dht22TemperatureLevelUpperLimit}
+                  label="DHT22 Temperature Upper Limit (°C)"
+                  onChange={handleChangeDht22TemperatureUpperLimit}
                 >
-                  <MenuItem value={22.0}>22</MenuItem>
-                  <MenuItem value={23.0}>23</MenuItem>
-                  <MenuItem value={24.0}>24</MenuItem>
-                  <MenuItem value={25.0}>25</MenuItem>
-                  <MenuItem value={26.0}>26</MenuItem>
-                  <MenuItem value={27.0}>27</MenuItem>
-                  <MenuItem value={28.0}>28</MenuItem>
-                  <MenuItem value={29.0}>29</MenuItem>
+                  {dropdownOptions.dht22TemperatureLevel.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl
+                sx={{ m: 1, minWidth: 250, padding: "10px" }}
+                size="medium"
+              >
+                <InputLabel id="dht22TemperatureLevelLowerLimit-label">
+                  DHT22 Temperature Lower Limit (°C)
+                </InputLabel>
+                <Select
+                  labelId="dht22TemperatureLevelLowerLimit-label"
+                  id="dht22TemperatureLevelLowerLimit"
+                  value={dht22TemperatureLevelLowerLimit}
+                  label="DHT22 Temperature Lower Limit (°C)"
+                  onChange={handleChangeDht22TemperatureLowerLimit}
+                >
+                  {dropdownOptions.dht22TemperatureLevel.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
 
-            {/* Air Humidity*/}
+            {/* DHT22 Humidity */}
             <Box p="20px">
               <FormControl
                 sx={{ m: 1, minWidth: 250, padding: "10px" }}
                 size="medium"
               >
-                <InputLabel id="demo-select-small-label">
-                  Air Humidity (g/m3)
+                <InputLabel id="dht22HumidityLevelUpperLimit-label">
+                  DHT22 Humidity Upper Limit (g/m3)
                 </InputLabel>
                 <Select
-                  labelId="demo-select-small-label"
-                  id="demo-select-small"
-                  value={airHumidity}
-                  label="Air Humidity (g/m3)"
-                  onChange={handleChangeAirHumidity}
+                  labelId="dht22HumidityLevelUpperLimit-label"
+                  id="dht22HumidityLevelUpperLimit"
+                  value={dht22HumidityLevelUpperLimit}
+                  label="DHT22 Humidity Upper Limit (g/m3)"
+                  onChange={handleChangeDht22HumidityUpperLimit}
                 >
-                  <MenuItem value={20.0}>20</MenuItem>
-                  <MenuItem value={30.0}>30</MenuItem>
-                  <MenuItem value={40.0}>40</MenuItem>
-                  <MenuItem value={50.0}>50</MenuItem>
-                  <MenuItem value={60.0}>60</MenuItem>
-                  <MenuItem value={70.0}>70</MenuItem>
-                  <MenuItem value={80.0}>80</MenuItem>
+                  {dropdownOptions.dht22HumidityLevel.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl
+                sx={{ m: 1, minWidth: 250, padding: "10px" }}
+                size="medium"
+              >
+                <InputLabel id="dht22HumidityLevelLowerLimit-label">
+                  DHT22 Humidity Lower Limit (g/m3)
+                </InputLabel>
+                <Select
+                  labelId="dht22HumidityLevelLowerLimit-label"
+                  id="dht22HumidityLevelUpperLimit"
+                  value={dht22HumidityLevelLowerLimit}
+                  label="DHT22 Humidity Lower Limit (g/m3)"
+                  onChange={handleChangeDht22HumidityLowerLimit}
+                >
+                  {dropdownOptions.dht22HumidityLevel.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
 
-            {/* Plant Height */}
+            {/* Ultrasonic Plant Level */}
             <Box p="20px">
               <FormControl
                 sx={{ m: 1, minWidth: 250, padding: "10px" }}
                 size="medium"
               >
-                <InputLabel id="demo-select-small-label">
-                  Plant Height (cm)
-                </InputLabel>
-                <Select
-                  labelId="demo-select-small-label"
-                  id="demo-select-small"
-                  value={plantHeight}
-                  label="Plant Height (cm)"
-                  onChange={handleChangePlantHeight}
-                >
-                  <MenuItem value={5.0}>5</MenuItem>
-                  <MenuItem value={10.0}>10</MenuItem>
-                  <MenuItem value={15.0}>15</MenuItem>
-                  <MenuItem value={20.0}>20</MenuItem>
-                  <MenuItem value={25.0}>25</MenuItem>
-                  <MenuItem value={30.0}>30</MenuItem>
-                  <MenuItem value={40.0}>40</MenuItem>
-                  <MenuItem value={45.0}>45</MenuItem>
-                  <MenuItem value={50.0}>50</MenuItem>
-                  <MenuItem value={55.0}>55</MenuItem>
-                </Select>
+                <TextField
+                  type="number"
+                  inputProps={{
+                    pattern: "[0-9]*", // Allow only decimal digits
+                  }}
+                  labelId="ultrasonicPlantLevelLimit-label"
+                  id="ultrasonicPlantLevelLimit"
+                  value={ultrasonicPlantLevelLimit}
+                  label="Ultrasonic Plant Level Limit (cm)"
+                  onChange={handleChangeUltrasonicPlantLevelLimit}
+                />
+              </FormControl>
+              <FormControl
+                sx={{ m: 1, minWidth: 250, padding: "10px" }}
+                size="medium"
+              >
+                <TextField
+                  type="number"
+                  inputProps={{
+                    pattern: "[0-9]*", // Allow only decimal digits
+                  }}
+                  labelId="ultrasonicPlantLevelSystemHeight-label"
+                  id="ultrasonicPlantLevelSystemHeight"
+                  value={ultrasonicPlantSystemHeight}
+                  label="Ultrasonic Plant System Height (cm)"
+                  onChange={handleChangeUltrasonicPlantSystemHeight}
+                />
               </FormControl>
             </Box>
           </Box>
@@ -301,6 +739,7 @@ const AdjustThresholds = () => {
             type="submit"
             color="secondary"
             variant="contained"
+            onClick={handleChangeParameters}
             sx={{
               gridColumn: "span 2",
               height: 60,
