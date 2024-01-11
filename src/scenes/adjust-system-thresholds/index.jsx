@@ -30,8 +30,6 @@ const AdjustThresholds = () => {
   const [ds18b20LowerLimit, setDs18b20LowerLimit] = useState(0);
 
   // State variables for holding values for terrestrial sensors
-  const [ultrasonicPlantLevelLowerLimit, setUltrasonicPlantLevelLowerLimit] =
-    useState(0);
   const [ultrasonicPlantLevelUpperLimit, setUltrasonicPlantLevelUpperLimit] =
     useState(0);
   const [dht22TemperatureLevelUpperLimit, setDht22TemperatureLevelUpperLimit] =
@@ -74,11 +72,6 @@ const AdjustThresholds = () => {
         setUltrasonicPlantLevelUpperLimit(
           thresholds.ultrasonicPlantLevelUpperLimit
         );
-        setUltrasonicWaterLevelLowerLimit(
-          thresholds.ultrasonicPlantLevelLowerLimit
-        );
-        //setUltrasonicPlantLevelLimit(thresholds.ultrasonicPlantLevelLimit);
-        //setUltrasonicPlantSystemHeight(thresholds.ultrasonicPlantSystemHeight);
         setDht22TemperatureLevelUpperLimit(
           thresholds.dht22TemperatureLevelUpperLimit
         );
@@ -91,8 +84,6 @@ const AdjustThresholds = () => {
         setDht22HumidityLevelLowerLimit(
           thresholds.dht22HumidityLevelLowerLimit
         );
-
-        // ... (update other state variables accordingly)
       } catch (error) {
         toast.error("Failed to fetch threshold values.", {
           position: "top-center",
@@ -159,10 +150,6 @@ const AdjustThresholds = () => {
 
   const handleChangeDs18b20LowerLimit = (event) => {
     setDs18b20LowerLimit(event.target.value);
-  };
-
-  const handleChangeUltrasonicPlantLowerLimit = (event) => {
-    setUltrasonicPlantLevelLowerLimit(event.target.value);
   };
 
   const handleChangeUltrasonicPlantUpperLimit = (event) => {
@@ -286,21 +273,18 @@ const AdjustThresholds = () => {
     }
 
     // Validation: Check if the ultrasonic plant level limit is greater than or equal to the system height
-    if (ultrasonicPlantLevelUpperLimit < ultrasonicPlantLevelLowerLimit) {
+    if (ultrasonicPlantLevelUpperLimit <= 0) {
       validation = false;
-      toast.error(
-        "Ultrasonic Plant Level Upper Limit should be greater than or equal to Ultrasonic Plant Lower Limit.",
-        {
-          position: "top-center",
-          autoClose: 1500,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: false,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
+      toast.error("Plant height must not be negative or equal to zero.", {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: "colored",
+      });
       return;
     }
 
@@ -324,7 +308,6 @@ const AdjustThresholds = () => {
             ultrasonicWaterLevelUpperLimit: ultrasonicWaterLevelUpperLimit,
             ultrasonicWaterLevelLowerLimit: ultrasonicWaterLevelLowerLimit,
             ultrasonicPlantLevelUpperLimit: ultrasonicPlantLevelUpperLimit,
-            ultrasonicPlantLevelLowerLimit: ultrasonicPlantLevelLowerLimit,
             dht22TemperatureLevelUpperLimit: dht22TemperatureLevelUpperLimit,
             dht22TemperatureLevelLowerLimit: dht22TemperatureLevelLowerLimit,
             dht22HumidityLevelUpperLimit: dht22HumidityLevelUpperLimit,
@@ -696,26 +679,10 @@ const AdjustThresholds = () => {
                   inputProps={{
                     pattern: "[0-9]*", // Allow only decimal digits
                   }}
-                  labelId="ultrasonicPlantLevelLowerLimit-label"
-                  id="ultrasonicPlantLowerLimit"
-                  value={ultrasonicPlantLevelLowerLimit}
-                  label="Ultrasonic Plant Level Lower Limit (cm)"
-                  onChange={handleChangeUltrasonicPlantLowerLimit}
-                />
-              </FormControl>
-              <FormControl
-                sx={{ m: 1, minWidth: 250, padding: "10px" }}
-                size="medium"
-              >
-                <TextField
-                  type="number"
-                  inputProps={{
-                    pattern: "[0-9]*", // Allow only decimal digits
-                  }}
                   labelId="ultrasonicPlantLevelUpperLimit-label"
                   id="ultrasonicPlantUpperLimit"
                   value={ultrasonicPlantLevelUpperLimit}
-                  label="Ultrasonic Plant Level Upper Limit (cm)"
+                  label="Ultrasonic Plant Height Limit (cm)"
                   onChange={handleChangeUltrasonicPlantUpperLimit}
                 />
               </FormControl>

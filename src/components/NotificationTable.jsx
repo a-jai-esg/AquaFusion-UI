@@ -18,7 +18,7 @@ const NotificationTable = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/farmadmin/administrative/data/get_notifications",
+        "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/farmadmin/administrative/get_todays_notifications",
         {
           emailAddress: localStorage.getItem("emailAddress"),
           password: localStorage.getItem("password"),
@@ -51,31 +51,20 @@ const NotificationTable = () => {
 
   const userData = JSON.parse(localStorage.getItem("userData"));
 
-  const handleDelete = async (notificationId) => {
-    setLoading(true);
-    try {
-      const notificationDeletionURL =
-        "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/farmadmin/administrative/data/delete_notification";
-      await axios.post(notificationDeletionURL, {
-        emailAddress: localStorage.getItem("emailAddress"),
-        password: localStorage.getItem("password"),
-        notificationId: notificationId,
-      });
-      fetchData();
-    } catch (error) {
-      console.error("Error deleting data: ", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const columns = [
     {
       field: "notificationId",
       flex: 2,
-      minWidth: 200,
+      minWidth: 150,
       headerName: "Notification ID",
       fontWeight: "bold",
+    },
+    {
+      field: "notificationTimestamp",
+      flex: 2,
+      minWidth: 100,
+      headerName: "Timestamp",
+      cellClassName: "date-column--cell",
     },
     {
       field: "notificationDate",
@@ -87,31 +76,16 @@ const NotificationTable = () => {
     {
       field: "notificationTitle",
       flex: 2,
-      minWidth: 300,
-      headerName: "Title",
+      minWidth: 350,
+      headerName: "Notification Title",
       cellClassName: "title-column--cell",
     },
     {
       field: "notificationDescription",
       flex: 2,
-      minWidth: 350,
-      headerName: "Description",
+      minWidth: 400,
+      headerName: "Notification Description",
       cellClassName: "description-column--cell",
-    },
-    {
-      field: "delete",
-      flex: 2,
-      minWidth: 150,
-      headerName: "Delete Notification",
-      renderCell: (params) => (
-        <Button
-          onClick={() => handleDelete(params.row.notificationId)}
-          variant="contained"
-          color="secondary"
-        >
-          Delete
-        </Button>
-      ),
     },
   ];
 
@@ -133,7 +107,7 @@ const NotificationTable = () => {
         <DataGrid
           rows={notificationData.slice(startIndex, startIndex + itemsPerPage)}
           columns={columns}
-          autoHeight
+          autoeight
           pageSize={itemsPerPage}
           page={currentPage - 1}
           onPageChange={(newPage) => setCurrentPage(newPage + 1)}

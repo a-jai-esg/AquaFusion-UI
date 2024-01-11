@@ -12,9 +12,9 @@ import {
   DataGrid,
   GridToolbarContainer,
   GridToolbarColumnsButton,
-  GridToolbarExport,
 } from "@mui/x-data-grid";
 import Header from "../../components/Header";
+import DownloadBacklogModal from "../../components/modals/DownloadBacklogModal";
 
 const Notifications = () => {
   const theme = useTheme();
@@ -22,6 +22,8 @@ const Notifications = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showDownloadModal, setShowDownloadModal] = useState(false); // State for modal visibility
+
   const itemsPerPage = 10;
 
   const userData = JSON.parse(localStorage.getItem("userData"));
@@ -32,7 +34,7 @@ const Notifications = () => {
   }, [currentPage]);
 
   const getNotificationsURL =
-    "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/farmadmin/administrative/data/get_notifications";
+    "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/farmadmin/administrative/get_all_notifications";
 
   const fetchData = async () => {
     setLoading(true);
@@ -64,43 +66,43 @@ const Notifications = () => {
     }
   };
 
-  const handleDelete = async (notificationId) => {
-    setLoading(true);
-    try {
-      const notificationDeletionURL =
-        "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/farmadmin/administrative/data/delete_notification";
-      await axios.post(notificationDeletionURL, {
-        emailAddress: localStorage.getItem("emailAddress"),
-        password: localStorage.getItem("password"),
-        notificationId: notificationId,
-      });
-      fetchData();
-    } catch (error) {
-      console.error("Error deleting data: ", error);
-    } finally {
-      setLoading(false);
-    }
+  const handleToggleDownloadModal = () => {
+    setShowDownloadModal(!showDownloadModal);
   };
 
   const customToolBar = () => (
     <GridToolbarContainer>
       <GridToolbarColumnsButton />
-      <GridToolbarExport />
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleToggleDownloadModal}
+      >
+        Download Backlogs
+      </Button>
     </GridToolbarContainer>
   );
 
   const columns = [
     {
       field: "notificationId",
-      flex: 2,
-      maxWidth: 300,
+      flex: 1,
+      minWidth: 300,
+      maxWidth: 400,
       headerName: "Notification ID",
       fontWeight: "bold",
     },
     {
+      field: "notificationTimestamp",
+      flex: 1,
+      minWidth: 150,
+      headerName: "Timestamp",
+      cellClassName: "date-column--cell",
+    },
+    {
       field: "notificationDate",
-      flex: 2,
-      maxWidth: 400,
+      flex: 1,
+      minWidth: 150,
       headerName: "Date",
       cellClassName: "date-column--cell",
     },
@@ -118,21 +120,6 @@ const Notifications = () => {
       headerName: "Description",
       cellClassName: "description-column--cell",
     },
-    {
-      field: "delete",
-      flex: 2,
-      maxWidth: 300,
-      headerName: "Delete Notification",
-      renderCell: (params) => (
-        <Button
-          onClick={() => handleDelete(params.row.notificationId)}
-          variant="contained"
-          color="secondary"
-        >
-          Delete
-        </Button>
-      ),
-    },
   ];
 
   return (
@@ -140,7 +127,7 @@ const Notifications = () => {
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header
           title="Notifications"
-          subtitle={`Notifications for ${userData.workgroupId}`}
+          subtitle={`Showing the latest notifications for ${userData.workgroupId}`}
         />
       </Box>
       <Box pt="20px" display="flex" justifyContent="space-between">
@@ -202,12 +189,27 @@ const Notifications = () => {
               getRowId={(row) => row.notificationId}
               pageSize={itemsPerPage}
               page={currentPage - 1}
-              onPageChange={(newPage) => setCurrentPage(newPage + 1)} // Corrected line
+              onPageChange={(newPage) => setCurrentPage(newPage + 1)}
               autoHeight
             />
           )}
         </Box>
       </Box>
+
+      {/* Render the DownloadBacklogModal component based on modal visibility state */}
+      <DownloadBacklogModal
+        isOpen={showDownloadModal}
+        onRequestClose={handleToggleDownloadModal}
+        onDownloadBacklog={(startDate, endDate) => {
+          // Add logic for handling download backlog with startDate and endDate
+          console.log(
+            "Downloading notification backlogs from " +
+              startDate +
+              " to " +
+              endDate
+          );
+        }}
+      />
     </Box>
   );
 };
