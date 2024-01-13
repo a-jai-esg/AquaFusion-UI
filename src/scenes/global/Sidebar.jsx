@@ -131,7 +131,7 @@ const Sidebar = () => {
             </MenuItem>
           )}
 
-          <Box paddingLeft={isCollapsed ? undefined : "2%"}>
+          <Box paddingLeft={isCollapsed ? undefined : "1.6%"}>
             <Item
               title="Dashboard"
               to="/dashboard"
@@ -146,7 +146,7 @@ const Sidebar = () => {
               fontWeight="400"
               sx={{ m: "25px auto 5px 20px" }}
             >
-              Farm Management
+              Manage
             </Typography>
 
             <Item
@@ -157,7 +157,7 @@ const Sidebar = () => {
               setSelected={setSelected}
             />
             <Item
-              title="Register and Manage Farmers"
+              title="Register and Approve Farmers"
               to="/register-farmer"
               icon={<PersonOutlinedIcon />}
               selected={selected}

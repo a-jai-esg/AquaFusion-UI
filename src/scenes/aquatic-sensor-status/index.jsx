@@ -1,8 +1,10 @@
-import { useEffect } from "react";
-import { Box, useTheme } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, Button, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import LineChartComponent from "../../components/LineChartComponent";
+import DownloadAquaticBacklogModal from "../../components/modals/DownloadAquaticBacklogModal";
+import _ from "lodash";
 
 const AquaticSensorStatus = () => {
   useEffect(() => {
@@ -12,35 +14,55 @@ const AquaticSensorStatus = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const systemData = JSON.parse(localStorage.getItem("systemData")) || {};
+  // Parse the stringified JSON from localStorage
+  const aquaticSensorData =
+    JSON.parse(localStorage.getItem("aquaticData")) || {};
 
-  // Function to process and parse data for the charts
-  const processData = (dataKey) => {
-    if (systemData[dataKey]) {
-      return systemData[dataKey].map((data) => ({
+  // Function to process and parse aquatic data for the chart
+  const aquaticProcessData = (dataKey) => {
+    if (aquaticSensorData[dataKey]) {
+      return aquaticSensorData[dataKey].map((data) => ({
         timestamp: data.timestamp,
         value:
           parseFloat(data.ph_level) ||
-          parseFloat(data.temperature) ||
           parseFloat(data.ppm) ||
-          parseFloat(data.distance),
+          parseFloat(data.distance) ||
+          parseFloat(data.temperature),
       }));
     }
     return [];
   };
 
-  const phData = processData("0"); // pH
-  const tdsData = processData("1"); // TDS
-  const waterTemperatureData = processData("6"); // Water Temperature
-  const ultrasonicWaterData = processData("5"); // Ultrasonic Water/ Volume
+  const phData = _.reverse(aquaticProcessData(0)); // pH
+  const tdsData = _.reverse(aquaticProcessData(1)); // TDS
+  const waterTemperatureData = _.reverse(aquaticProcessData(3)); // Water Temperature
+  const ultrasonicWaterData = _.reverse(aquaticProcessData(2)); // Ultrasonic Water/ Volume
+
+  const [isDownloadModalOpen, setDownloadModalOpen] = useState(false);
+
+  const handleDownloadModalOpen = () => {
+    setDownloadModalOpen(true);
+  };
+
+  const handleDownloadModalClose = () => {
+    setDownloadModalOpen(false);
+  };
 
   return (
     <Box m="20px">
-      <Box display="flex" justifycontent="space-between" alignItems="center">
+      <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header
           title="Aquatic Sensor Status"
-          subtitle="View water volume, pH Level, TDS Levels, and water temperature."
+          subtitle="View pH level, TDS levels, water level, and water temperature."
         />
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ mr: "8px" }}
+          onClick={handleDownloadModalOpen}
+        >
+          Download Aquatic Data Backlog
+        </Button>
       </Box>
       <Box>
         <Box display="flex" justifyContent="space-between">
@@ -110,6 +132,15 @@ const AquaticSensorStatus = () => {
           />
         </Box>
       </Box>
+
+      {/* Download Backlog Modal */}
+      <DownloadAquaticBacklogModal
+        isOpen={isDownloadModalOpen}
+        onRequestClose={handleDownloadModalClose}
+        onDownloadBacklog={() => {
+          // Add any specific logic if needed
+        }}
+      />
     </Box>
   );
 };

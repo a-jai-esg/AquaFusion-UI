@@ -5,31 +5,71 @@ import LineChartComponent from "../../components/LineChartComponent";
 import NotificationTable from "../../components/NotificationTable";
 import { notificationDataToday } from "../../data/mockLineData";
 import { tokens } from "../../theme";
+import { DateTime } from "luxon";
 import axios from "axios"; // Import axios for API calls
+import _ from "lodash";
 
 const Dashboard = () => {
-  const [systemData, setSystemData] = useState({});
+  const [aquaticData, setAquaticData] = useState({});
+  const [terrestrialData, setTerrestrialData] = useState({});
   const [loading, setLoading] = useState(true);
+
+  const getLocaleDateString = (date) => {
+    return date.toFormat("MM/dd/yyyy");
+  };
+
+  const dateNow = getLocaleDateString(DateTime.now().setZone("Asia/Manila"));
+
+  // Data URLs
+  const dataURLs = [
+    "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/system/administrative/get_system_aquatic_values",
+    "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/system/administrative/get_system_terrestrial_values",
+  ];
 
   useEffect(() => {
     document.title = "Dashboard";
 
-    // Fetch aggregated system data
-    const aggregatedSystemDataURL =
-      "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/system/administrative/get_aggregated_system_values";
-
+    // Fetch aquatic data
     axios
-      .post(aggregatedSystemDataURL, {
+      .post(dataURLs[0], {
         emailAddress: localStorage.getItem("emailAddress"),
         password: localStorage.getItem("password"),
+        startDate: dateNow,
+        endDate: dateNow,
       })
       .then((response) => {
         if (response.status === 200) {
-          setSystemData(response.data);
+          setAquaticData(response.data);
+
+          // Save aquaticData to local storage
+          localStorage.setItem("aquaticData", JSON.stringify(response.data));
         }
       })
       .catch((error) => {
-        console.error("Failed to fetch aggregated system data:", error);
+        console.error("Failed to fetch aggregated aquatic data:", error);
+      });
+
+    // Fetch terrestrial data
+    axios
+      .post(dataURLs[1], {
+        emailAddress: localStorage.getItem("emailAddress"),
+        password: localStorage.getItem("password"),
+        startDate: dateNow,
+        endDate: dateNow,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setTerrestrialData(response.data);
+
+          // Save terrestrialData to local storage
+          localStorage.setItem(
+            "terrestrialData",
+            JSON.stringify(response.data)
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to fetch aggregated terrestrial data:", error);
       })
       .finally(() => {
         setLoading(false);
@@ -39,28 +79,46 @@ const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  // Function to process and parse data for the charts
-  const processData = (dataKey) => {
-    if (systemData[dataKey]) {
-      return systemData[dataKey].map((data) => ({
+  // Parse the object in the form of data from localStorage
+  const aquaticSensorData =
+    JSON.parse(localStorage.getItem("aquaticData")) || {};
+
+  const terrestrialSensorData =
+    JSON.parse(localStorage.getItem("terrestrialData")) || {};
+
+  // Function to process and parse aquatic data for the chart
+  const aquaticProcessData = (dataKey) => {
+    if (aquaticSensorData[dataKey]) {
+      return aquaticSensorData[dataKey].map((data) => ({
         timestamp: data.timestamp,
-        value:
-          parseFloat(data.humidity) ||
-          parseFloat(data.temperature) ||
-          parseFloat(data.waterTemperature),
+        value: parseFloat(data.temperature) || 0,
       }));
     }
     return [];
   };
 
-  const waterTemperatureData = processData("6"); // Water Temperature
-  const airTemperatureData = processData("3"); // Air Temperature
-  const humidityData = processData("2"); // Humidity
+  // Function to process and parse terrestrial data for the chart
+  const terrestrialProcessData = (dataKey) => {
+    if (terrestrialSensorData[dataKey]) {
+      return terrestrialSensorData[dataKey].map((data) => ({
+        timestamp: data.timestamp,
+        value:
+          parseFloat(data.humidity) ||
+          parseFloat(data.temperature) ||
+          parseFloat(data.distance) ||
+          0,
+      }));
+    }
+    return [];
+  };
+
+  const waterTemperatureData = _.reverse(aquaticProcessData(3)); // Water Temperature
+  const airTemperatureData = _.reverse(terrestrialProcessData(1)); // Air Temperature
+  const airHumidityData = _.reverse(terrestrialProcessData(0)); // Humidity
 
   const userData = JSON.parse(localStorage.getItem("userData")) || {};
 
   const helloMessage = `Howdy, Admin ${userData.fullName || ""}!`;
-
   if (loading) {
     // Display circular progress indicator with animation while data is still being fetched
     return (
@@ -97,8 +155,8 @@ const Dashboard = () => {
           >
             <LineChartComponent
               data={waterTemperatureData}
-              dataKey="value" // Make sure this matches the key in your data
-              timestamp="timestamp" // Make sure this matches the key in your data
+              dataKey="value"
+              timestamp="timestamp"
               graphTitle="Water Temperature (°C)"
             />
           </Box>
@@ -140,8 +198,8 @@ const Dashboard = () => {
           >
             <LineChartComponent
               data={airTemperatureData}
-              dataKey="value" // Make sure this matches the key in your data
-              timestamp="timestamp" // Make sure this matches the key in your data
+              dataKey="value"
+              timestamp="timestamp"
               graphTitle="Air Temperature (°C)"
             />
           </Box>
@@ -155,9 +213,9 @@ const Dashboard = () => {
             borderRadius="4px"
           >
             <LineChartComponent
-              data={humidityData}
-              dataKey="value" // Make sure this matches the key in your data
-              timestamp="timestamp" // Make sure this matches the key in your data
+              data={airHumidityData}
+              dataKey="value"
+              timestamp="timestamp"
               graphTitle="Air Humidity (%)"
             />
           </Box>

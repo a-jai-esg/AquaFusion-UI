@@ -14,7 +14,7 @@ import {
   GridToolbarColumnsButton,
 } from "@mui/x-data-grid";
 import Header from "../../components/Header";
-import DownloadBacklogModal from "../../components/modals/DownloadBacklogModal";
+import DownloadNotificationsBacklogModal from "../../components/modals/DownloadNotificationsBacklogModal";
 
 const Notifications = () => {
   const theme = useTheme();
@@ -22,9 +22,7 @@ const Notifications = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [showDownloadModal, setShowDownloadModal] = useState(false); // State for modal visibility
-
-  const itemsPerPage = 10;
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
 
   const userData = JSON.parse(localStorage.getItem("userData"));
 
@@ -42,7 +40,9 @@ const Notifications = () => {
       const response = await axios.post(getNotificationsURL, {
         emailAddress: localStorage.getItem("emailAddress"),
         password: localStorage.getItem("password"),
+        page: currentPage, // Add the page parameter
       });
+
       if (response.data === null) {
         throw null;
       }
@@ -52,13 +52,7 @@ const Notifications = () => {
         id: index + 1,
       }));
 
-      const newStartIndex = (currentPage - 1) * itemsPerPage;
-      const limitedData = dataWithIds.slice(
-        newStartIndex,
-        newStartIndex + itemsPerPage
-      );
-
-      setData(limitedData);
+      setData(dataWithIds);
     } catch (error) {
       console.error("Error fetching data: ", error);
     } finally {
@@ -91,34 +85,42 @@ const Notifications = () => {
       maxWidth: 400,
       headerName: "Notification ID",
       fontWeight: "bold",
-    },
-    {
-      field: "notificationTimestamp",
-      flex: 1,
-      minWidth: 150,
-      headerName: "Timestamp",
-      cellClassName: "date-column--cell",
+      cellClassName: "notification-id-column--cell",
     },
     {
       field: "notificationDate",
       flex: 1,
       minWidth: 150,
       headerName: "Date",
-      cellClassName: "date-column--cell",
+      cellClassName: "notification-date-column--cell",
+    },
+    {
+      field: "notificationTimestamp",
+      flex: 1,
+      minWidth: 150,
+      headerName: "Timestamp",
+      cellClassName: "notification-timestamp-column--cell",
+    },
+    {
+      field: "notificationType",
+      flex: 1,
+      minWidth: 150,
+      headerName: "Type",
+      cellClassName: "notification-type-column--cell",
     },
     {
       field: "notificationTitle",
       flex: 2,
       maxWidth: 400,
       headerName: "Title",
-      cellClassName: "title-column--cell",
+      cellClassName: "notification-title-column--cell",
     },
     {
       field: "notificationDescription",
       flex: 2,
       maxWidth: 500,
       headerName: "Description",
-      cellClassName: "description-column--cell",
+      cellClassName: "notification-description-column--cell",
     },
   ];
 
@@ -132,7 +134,6 @@ const Notifications = () => {
       </Box>
       <Box pt="20px" display="flex" justifyContent="space-between">
         <Box
-          h="50vh"
           p="30px"
           flex="1 1 50%"
           ml="auto"
@@ -187,7 +188,14 @@ const Notifications = () => {
               columns={columns}
               components={{ Toolbar: customToolBar }}
               getRowId={(row) => row.notificationId}
-              pageSize={itemsPerPage}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 10,
+                  },
+                },
+              }}
+              pageSizeOptions={[5]}
               page={currentPage - 1}
               onPageChange={(newPage) => setCurrentPage(newPage + 1)}
               autoHeight
@@ -196,12 +204,10 @@ const Notifications = () => {
         </Box>
       </Box>
 
-      {/* Render the DownloadBacklogModal component based on modal visibility state */}
-      <DownloadBacklogModal
+      <DownloadNotificationsBacklogModal
         isOpen={showDownloadModal}
         onRequestClose={handleToggleDownloadModal}
         onDownloadBacklog={(startDate, endDate) => {
-          // Add logic for handling download backlog with startDate and endDate
           console.log(
             "Downloading notification backlogs from " +
               startDate +

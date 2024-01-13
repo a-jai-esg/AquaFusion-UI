@@ -185,6 +185,14 @@ const ManageWorkgroup = () => {
               editMode="row"
               rows={data}
               columns={columns}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 10,
+                  },
+                },
+              }}
+              pageSizeOptions={[10]}
               components={{ Toolbar: customToolBar }}
               getRowId={(row) => row.accountId}
             />

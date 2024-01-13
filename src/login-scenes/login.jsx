@@ -59,38 +59,6 @@ const Login = ({ setSessionIsActive }) => {
           localStorage.setItem("emailAddress", emailField);
           localStorage.setItem("password", passwordField);
 
-          // Fetch aggregated system data only if login is successful
-          const aggregatedSystemDataURL =
-            "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/system/administrative/get_aggregated_system_values";
-          axios
-            .post(aggregatedSystemDataURL, {
-              emailAddress: emailField,
-              password: passwordField,
-            })
-            .then((aggregatedData) => {
-              if (aggregatedData.status === 200) {
-                localStorage.setItem(
-                  "systemData",
-                  JSON.stringify(aggregatedData.data)
-                );
-              }
-            })
-            .catch(() => {
-              toast.error(
-                "Failed to get Aquaponics System's Value. Please check your internet connectivity.",
-                {
-                  position: "top-center",
-                  autoClose: 1500,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: false,
-                  progress: undefined,
-                  theme: "colored",
-                }
-              );
-            });
-
           setSessionIsActive(true);
         } else {
           toast.error("Login failed. Please try again.", {

@@ -18,7 +18,7 @@ import axios from "axios";
 import { saveAs } from "file-saver";
 import Papa from "papaparse";
 
-const DownloadBacklogModal = ({
+const DownloadTerrestrialBacklogModal = ({
   isOpen,
   onRequestClose,
   onDownloadBacklog,
@@ -45,6 +45,21 @@ const DownloadBacklogModal = ({
   };
 
   const handleDownloadBacklog = async () => {
+    // Validate start date and end date
+    if (startDate && endDate && startDate > endDate) {
+      toast.error("Start date cannot be greater than end date.", {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: "colored",
+      });
+      return;
+    }
+
     setLoading(true);
 
     const formattedStartDate = formatDate(startDate);
@@ -52,29 +67,39 @@ const DownloadBacklogModal = ({
 
     try {
       const downloadBacklogURL =
-        "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/farmadmin/administrative/get_filtered_notifications";
+        "https://us-central1-aquafusion-b8744.cloudfunctions.net/api/system/administrative/get_system_terrestrial_values";
 
-      await axios
-        .post(downloadBacklogURL, {
-          emailAddress: localStorage.getItem("emailAddress"),
-          password: localStorage.getItem("password"),
-          startDate: formattedStartDate,
-          endDate: formattedEndDate,
-        })
-        .then((result) => {
-          // Convert JSON to CSV using PapaParse
-          const csv = Papa.unparse(result.data);
-          // Create Blob with CSV data
-          const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const result = await axios.post(downloadBacklogURL, {
+        emailAddress: localStorage.getItem("emailAddress"),
+        password: localStorage.getItem("password"),
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+      });
 
-          // Download the CSV file
-          let filename;
-          formattedStartDate === formattedEndDate
-            ? (filename = `${workgroupId}-${formattedStartDate}-backlog_data.csv`)
-            : (filename = `${workgroupId}-${formattedStartDate} to ${formattedEndDate}-backlog_data.csv`);
+      let i = 0;
 
-          saveAs(blob, filename);
-        });
+      const descriptors = [
+        "DHT22_Humidity_values",
+        "DHT22_Temperature_values",
+        "plant_growth_values",
+      ];
+
+      result.data.forEach((resultant) => {
+        // Convert JSON to CSV using PapaParse
+        const csv = Papa.unparse(resultant);
+        // Create Blob with CSV data
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+
+        let filename;
+
+        formattedStartDate === formattedEndDate
+          ? (filename = `${workgroupId}-${formattedStartDate}-terrestrial-${descriptors[i]}-backlog_data.csv`)
+          : (filename = `${workgroupId}-${formattedStartDate} to ${formattedEndDate}-terrestrial-${descriptors[i]}-backlog_data.csv`);
+
+        // Download the CSV file
+        saveAs(blob, filename);
+        i++;
+      });
 
       toast.success("Backlog downloaded successfully", {
         position: "top-center",
@@ -86,8 +111,6 @@ const DownloadBacklogModal = ({
         progress: undefined,
         theme: "colored",
       });
-
-      // Handle success, if needed
     } catch (error) {
       toast.error("Backlog not found.", {
         position: "top-center",
@@ -129,7 +152,7 @@ const DownloadBacklogModal = ({
             gutterBottom
             sx={{ paddingBottom: "5px" }}
           >
-            Download Backlog
+            Download Terrestrial Data Backlog
           </Typography>
           <div>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -181,4 +204,4 @@ const DownloadBacklogModal = ({
   );
 };
 
-export default DownloadBacklogModal;
+export default DownloadTerrestrialBacklogModal;
